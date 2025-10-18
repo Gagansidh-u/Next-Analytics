@@ -23,6 +23,7 @@ const plans = [
       { text: 'No live dashboard updates', included: false },
     ],
     cta: 'Choose Basic',
+    popular: true,
     href: '/checkout?plan=basic'
   },
   {
@@ -42,7 +43,6 @@ const plans = [
       { text: 'Priority Email & Chat support', included: true },
     ],
     cta: 'Choose Professional',
-    popular: true,
     comingSoon: true,
     href: '/coming-soon'
   },
