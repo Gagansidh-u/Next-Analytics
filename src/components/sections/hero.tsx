@@ -30,7 +30,7 @@ export default function Hero() {
           <div className="mt-10 flex items-center justify-center gap-x-6">
             <Button size="lg" asChild>
               <Link href="#pricing">
-                Get Your Free Proposal
+                Get Started
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
