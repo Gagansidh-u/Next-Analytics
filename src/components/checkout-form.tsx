@@ -43,6 +43,7 @@ export default function CheckoutForm() {
   const [planId, setPlanId] = useState<keyof typeof plans | null>(null);
   const [plan, setPlan] = useState<{ name: string; price: number } | null>(null);
   const [discount, setDiscount] = useState(0);
+  const [isPay1Coupon, setIsPay1Coupon] = useState(false);
   const [total, setTotal] = useState(0);
   const [couponCode, setCouponCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -60,10 +61,14 @@ export default function CheckoutForm() {
 
   useEffect(() => {
     if (plan) {
-      const newTotal = plan.price * (1 - discount);
-      setTotal(newTotal);
+      if (isPay1Coupon) {
+        setTotal(1);
+      } else {
+        const newTotal = plan.price * (1 - discount);
+        setTotal(newTotal);
+      }
     }
-  }, [plan, discount]);
+  }, [plan, discount, isPay1Coupon]);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -71,14 +76,25 @@ export default function CheckoutForm() {
   });
 
   const applyCoupon = useCallback(() => {
-    if (couponCode.toUpperCase() === 'OFFNEXT25') {
+    const upperCaseCoupon = couponCode.toUpperCase();
+
+    if (upperCaseCoupon === 'OFFNEXT25') {
       setDiscount(0.25);
+      setIsPay1Coupon(false);
       toast({
         title: 'Coupon Applied!',
         description: 'You received a 25% discount.',
       });
+    } else if (upperCaseCoupon === 'PAY1') {
+      setDiscount(0);
+      setIsPay1Coupon(true);
+      toast({
+        title: 'Coupon Applied!',
+        description: 'You can now purchase this plan for just ₹1.',
+      });
     } else {
       setDiscount(0);
+      setIsPay1Coupon(false);
       toast({
         variant: 'destructive',
         title: 'Invalid Coupon',
@@ -114,7 +130,7 @@ export default function CheckoutForm() {
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsLoading(true);
-    if (!plan || total <= 0 || !isRazorpayLoaded) {
+    if ((!plan && !isPay1Coupon) || (total <= 0 && !isPay1Coupon) || !isRazorpayLoaded) {
       toast({
         variant: 'destructive',
         title: 'Payment Error',
@@ -136,7 +152,7 @@ export default function CheckoutForm() {
       amount: total * 100, // Amount in paise
       currency: 'INR',
       name: 'Next Analytics',
-      description: `Payment for ${plan.name}`,
+      description: `Payment for ${plan?.name}`,
       image: 'https://github.com/Gagansidh-u/My-Webapp/blob/master/Picsart_25-10-18_16-37-29-081.png?raw=true',
       order_id: order.id,
       handler: function (response: any) {
@@ -239,6 +255,12 @@ export default function CheckoutForm() {
                 <span>{plan.name}</span>
                 <span>₹{plan.price.toLocaleString()}</span>
                 </div>
+                {isPay1Coupon && (
+                  <div className="flex justify-between text-green-500">
+                      <span>PAY1 Coupon</span>
+                      <span>-₹{(plan.price - 1).toLocaleString()}</span>
+                  </div>
+                )}
                 {discount > 0 && (
                 <div className="flex justify-between text-green-500">
                     <span>Discount (25%)</span>
