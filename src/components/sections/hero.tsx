@@ -1,14 +1,12 @@
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { ArrowRight, Star } from 'lucide-react';
+import AnimatedHeroBackground from '@/components/animated-hero-background';
 
 export default function Hero() {
   return (
-    <section className="relative bg-background py-20 md:py-32">
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 top-0 z-0 h-full w-full bg-accent/10 [mask-image:radial-gradient(100%_100%_at_top_right,white,transparent)]"
-      />
+    <section className="relative bg-background py-20 md:py-32 overflow-hidden">
+      <AnimatedHeroBackground />
       <div className="container relative z-10">
         <div className="mx-auto max-w-3xl text-center">
           <div className="mb-4 flex justify-center">

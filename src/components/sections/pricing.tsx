@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 
 const plans = [
   {
+    id: 'basic',
     name: 'Basic',
     price: '₹5000',
     description: 'Perfect for startups and small businesses who want simple and clear insights.',
@@ -24,6 +25,7 @@ const plans = [
     cta: 'Choose Basic',
   },
   {
+    id: 'professional',
     name: 'Professional',
     price: '₹12000',
     description: 'A complete business intelligence solution for growing teams.',
@@ -42,6 +44,7 @@ const plans = [
     popular: true,
   },
   {
+    id: 'enterprise',
     name: 'Enterprise',
     price: 'Custom',
     description: 'Full-scale data system for enterprises and serious data-driven companies.',
@@ -105,7 +108,7 @@ export default function Pricing() {
               </CardContent>
               <CardFooter className="flex-col items-stretch gap-4">
                  <Button asChild className="w-full" variant={plan.popular ? 'default' : 'outline'}>
-                    <Link href={plan.isEnterprise ? '/enterprise' : '#cta'}>
+                    <Link href={plan.isEnterprise ? '/enterprise' : `/checkout?plan=${plan.id}`}>
                       {plan.cta}
                     </Link>
                 </Button>
