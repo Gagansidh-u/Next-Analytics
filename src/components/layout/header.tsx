@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, BarChart3 } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const NAV_LINKS = [
@@ -48,8 +49,8 @@ export default function Header() {
     >
       <div className="container flex h-16 items-center">
         <Link href="/" className="flex items-center gap-2">
-          <BarChart3 className="h-6 w-6 text-primary" />
-          <span className="text-lg font-bold">Nextlytics</span>
+          <Image src="/logo.png" alt="Next Analytics Logo" width={28} height={28} />
+          <span className="text-lg font-bold">Next Analytics</span>
         </Link>
         <nav className="ml-10 hidden items-center space-x-6 md:flex">
           <NavContent />
@@ -68,8 +69,8 @@ export default function Header() {
             <SheetContent side="left">
               <div className="flex h-full flex-col">
                 <div className="mb-8 flex items-center gap-2">
-                  <BarChart3 className="h-6 w-6 text-primary" />
-                  <span className="text-lg font-bold">Nextlytics</span>
+                   <Image src="/logo.png" alt="Next Analytics Logo" width={28} height={28} />
+                   <span className="text-lg font-bold">Next Analytics</span>
                 </div>
                 <nav className="flex flex-col items-start space-y-4">
                   <NavContent />

@@ -27,7 +27,7 @@ export default function Hero() {
             Turn Your Raw Data into Tangible Revenue
           </h1>
           <p className="mt-6 text-lg text-foreground/70">
-            Nextlytics provides simple, fast, and affordable data analytics for startups and SMBs. We transform your scattered data into clear insights, interactive dashboards, and actionable reports.
+            Next Analytics provides simple, fast, and affordable data analytics for startups and SMBs. We transform your scattered data into clear insights, interactive dashboards, and actionable reports.
           </p>
           <div className="mt-10 flex items-center justify-center gap-x-6">
             <Button size="lg" asChild>

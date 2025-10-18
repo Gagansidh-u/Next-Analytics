@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { BarChart3, Twitter, Linkedin, Github } from 'lucide-react';
+import Image from 'next/image';
+import { Twitter, Linkedin, Github } from 'lucide-react';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -10,8 +11,8 @@ export default function Footer() {
         <div className="grid gap-8 md:grid-cols-12">
           <div className="md:col-span-4">
             <div className="flex items-center gap-2">
-              <BarChart3 className="h-7 w-7 text-primary" />
-              <span className="text-xl font-bold">Nextlytics</span>
+              <Image src="/logo.png" alt="Next Analytics Logo" width={32} height={32} />
+              <span className="text-xl font-bold">Next Analytics</span>
             </div>
             <p className="mt-4 text-sm text-muted-foreground">
               Actionable insights for data-driven teams.
@@ -55,7 +56,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="mt-8 border-t pt-8 text-center text-sm text-muted-foreground">
-          <p>&copy; {currentYear} Nextlytics, Inc. All rights reserved.</p>
+          <p>&copy; {currentYear} Next Analytics, Inc. All rights reserved.</p>
         </div>
       </div>
     </footer>
