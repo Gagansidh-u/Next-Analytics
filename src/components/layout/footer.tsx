@@ -11,7 +11,7 @@ export default function Footer() {
         <div className="grid gap-8 md:grid-cols-12">
           <div className="md:col-span-4">
             <div className="flex items-center gap-2">
-              <Image src="https://github.com/Gagansidh-u/My-Webapp/blob/master/Picsart_25-10-18_16-37-29-081.png?raw=true" alt="Next Analytics Logo" width={32} height={32} />
+              <Image src="https://github.com/Gagansidh-u/My-Webapp/blob/master/Picsart_25-10-18_16-37-29-081.png?raw=true" alt="Next Analytics Logo" width={32} height={32} className="rounded-sm" />
               <span className="text-xl font-bold">Next Analytics</span>
             </div>
             <p className="mt-4 text-sm text-muted-foreground">
@@ -32,26 +32,33 @@ export default function Footer() {
           <div className="md:col-span-2">
             <h3 className="font-semibold">Product</h3>
             <ul className="mt-4 space-y-2 text-sm">
-              <li><Link href="#features" className="text-muted-foreground hover:text-foreground">Features</Link></li>
-              <li><Link href="#pricing" className="text-muted-foreground hover:text-foreground">Pricing</Link></li>
-              <li><Link href="#testimonials" className="text-muted-foreground hover:text-foreground">Testimonials</Link></li>
+              <li><Link href="/#features" className="text-muted-foreground hover:text-foreground">Features</Link></li>
+              <li><Link href="/#pricing" className="text-muted-foreground hover:text-foreground">Pricing</Link></li>
+              <li><Link href="/#testimonials" className="text-muted-foreground hover:text-foreground">Testimonials</Link></li>
               <li><Link href="/enterprise" className="text-muted-foreground hover:text-foreground">Enterprise</Link></li>
             </ul>
           </div>
           <div className="md:col-span-2">
             <h3 className="font-semibold">Company</h3>
             <ul className="mt-4 space-y-2 text-sm">
-              <li><Link href="#" className="text-muted-foreground hover:text-foreground">About Us</Link></li>
+              <li><Link href="/about" className="text-muted-foreground hover:text-foreground">About Us</Link></li>
               <li><Link href="#" className="text-muted-foreground hover:text-foreground">Careers</Link></li>
-              <li><Link href="#" className="text-muted-foreground hover:text-foreground">Contact</Link></li>
+              <li><Link href="#" className="text-muted-foreground hovertext-foreground">Contact</Link></li>
             </ul>
           </div>
            <div className="md:col-span-2">
             <h3 className="font-semibold">Resources</h3>
             <ul className="mt-4 space-y-2 text-sm">
-              <li><Link href="#" className="text-muted-foreground hover:text-foreground">Blog</Link></li>
-              <li><Link href="#faq" className="text-muted-foreground hover:text-foreground">FAQ</Link></li>
+              <li><Link href="/#faq" className="text-muted-foreground hover:text-foreground">FAQ</Link></li>
               <li><Link href="#" className="text-muted-foreground hover:text-foreground">Support</Link></li>
+            </ul>
+          </div>
+           <div className="md:col-span-2">
+            <h3 className="font-semibold">Legal</h3>
+            <ul className="mt-4 space-y-2 text-sm">
+              <li><Link href="/terms" className="text-muted-foreground hover:text-foreground">Terms</Link></li>
+              <li><Link href="/privacy" className="text-muted-foreground hover:text-foreground">Privacy</Link></li>
+              <li><Link href="/refund-policy" className="text-muted-foreground hover:text-foreground">Refund Policy</Link></li>
             </ul>
           </div>
         </div>
