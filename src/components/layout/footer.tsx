@@ -11,7 +11,7 @@ export default function Footer() {
         <div className="grid gap-8 md:grid-cols-12">
           <div className="md:col-span-4">
             <div className="flex items-center gap-2">
-              <Image src="/logo.png" alt="Next Analytics Logo" width={32} height={32} />
+              <Image src="https://github.com/Gagansidh-u/My-Webapp/blob/master/1760782534717.jpg?raw=true" alt="Next Analytics Logo" width={32} height={32} className="rounded-md" />
               <span className="text-xl font-bold">Next Analytics</span>
             </div>
             <p className="mt-4 text-sm text-muted-foreground">

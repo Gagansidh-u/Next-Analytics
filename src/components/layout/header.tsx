@@ -49,7 +49,7 @@ export default function Header() {
     >
       <div className="container flex h-16 items-center">
         <Link href="/" className="flex items-center gap-2">
-          <Image src="/logo.png" alt="Next Analytics Logo" width={28} height={28} />
+          <Image src="https://github.com/Gagansidh-u/My-Webapp/blob/master/1760782534717.jpg?raw=true" alt="Next Analytics Logo" width={28} height={28} className="rounded-sm" />
           <span className="text-lg font-bold">Next Analytics</span>
         </Link>
         <nav className="ml-10 hidden items-center space-x-6 md:flex">
@@ -67,11 +67,13 @@ export default function Header() {
               </Button>
             </SheetTrigger>
             <SheetContent side="left">
-              <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
-              <SheetDescription className="sr-only">Main navigation links for the site.</SheetDescription>
+                <SheetTitle className="sr-only">Menu</SheetTitle>
+                <SheetDescription className="sr-only">
+                  Mobile navigation menu
+                </SheetDescription>
               <div className="flex h-full flex-col">
                 <div className="mb-8 flex items-center gap-2">
-                   <Image src="/logo.png" alt="Next Analytics Logo" width={28} height={28} />
+                   <Image src="https://github.com/Gagansidh-u/My-Webapp/blob/master/1760782534717.jpg?raw=true" alt="Next Analytics Logo" width={28} height={28} className="rounded-sm" />
                    <span className="text-lg font-bold">Next Analytics</span>
                 </div>
                 <nav className="flex flex-col items-start space-y-4">
