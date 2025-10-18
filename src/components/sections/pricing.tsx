@@ -43,6 +43,7 @@ const plans = [
     ],
     cta: 'Choose Professional',
     popular: true,
+    comingSoon: true,
     href: '/coming-soon'
   },
   {
@@ -62,6 +63,7 @@ const plans = [
     ],
     cta: 'Contact Sales',
     isEnterprise: true,
+    comingSoon: true,
     href: '/coming-soon'
   },
 ];
@@ -86,10 +88,15 @@ export default function Pricing() {
               )}
             >
               <CardHeader className="relative">
-                {plan.popular && (
-                  <Badge className="absolute right-6 top-6">Most Popular</Badge>
-                )}
-                <CardTitle>{plan.name}</CardTitle>
+                <div className="flex items-center justify-between">
+                  <CardTitle>{plan.name}</CardTitle>
+                  {plan.popular && (
+                    <Badge>Most Popular</Badge>
+                  )}
+                  {plan.comingSoon && (
+                     <Badge variant="outline">Coming Very Soon</Badge>
+                  )}
+                </div>
                 <CardDescription>{plan.description}</CardDescription>
                 <div className="pt-4">
                   <span className="text-4xl font-bold">{plan.price}</span>
@@ -110,7 +117,7 @@ export default function Pricing() {
                 </ul>
               </CardContent>
               <CardFooter className="flex-col items-stretch gap-4">
-                 <Button asChild className="w-full" variant={plan.popular ? 'default' : 'outline'}>
+                 <Button asChild className="w-full" variant={plan.popular ? 'default' : 'outline'} disabled={plan.comingSoon}>
                     <Link href={plan.href}>
                       {plan.cta}
                     </Link>
