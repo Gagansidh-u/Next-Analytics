@@ -137,7 +137,7 @@ export default function CheckoutForm() {
       currency: 'INR',
       name: 'Next Analytics',
       description: `Payment for ${plan.name}`,
-      image: 'https://github.com/Gagansidh-u/My-Webapp/blob/master/1760782534717.jpg?raw=true',
+      image: 'https://github.com/Gagansidh-u/My-Webapp/blob/master/Picsart_25-10-18_16-37-29-081.png?raw=true',
       order_id: order.id,
       handler: function (response: any) {
         toast({
