@@ -35,7 +35,6 @@ export default function Footer() {
               <li><Link href="/#features" className="text-muted-foreground hover:text-foreground">Features</Link></li>
               <li><Link href="/#pricing" className="text-muted-foreground hover:text-foreground">Pricing</Link></li>
               <li><Link href="/#testimonials" className="text-muted-foreground hover:text-foreground">Testimonials</Link></li>
-              <li><Link href="/enterprise" className="text-muted-foreground hover:text-foreground">Enterprise</Link></li>
             </ul>
           </div>
           <div className="md:col-span-2">
