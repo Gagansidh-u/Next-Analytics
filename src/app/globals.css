@@ -73,12 +73,12 @@ body {
 
 @keyframes pulse-glow {
   0%, 100% {
-    filter: drop-shadow(0 0 0.5rem hsla(var(--primary), 0.4));
-    text-shadow: 0 0 0.5rem hsla(var(--primary), 0.4);
+    filter: drop-shadow(0 0 0.75rem hsla(var(--primary), 0.5));
+    text-shadow: 0 0 0.75rem hsla(var(--primary), 0.5);
   }
   50% {
-    filter: drop-shadow(0 0 1.25rem hsla(var(--primary), 0.7));
-    text-shadow: 0 0 1.25rem hsla(var(--primary), 0.7);
+    filter: drop-shadow(0 0 1.5rem hsla(var(--primary), 0.8));
+    text-shadow: 0 0 1.5rem hsla(var(--primary), 0.8);
   }
 }
 
@@ -86,11 +86,11 @@ body {
   .cursor-glow {
     background: radial-gradient(
       600px circle at var(--x) var(--y),
-      hsla(var(--primary), 0.1),
+      hsla(var(--primary), 0.2),
       transparent 80%
     );
   }
   .header-glow {
-    animation: pulse-glow 3s ease-in-out infinite;
+    animation: pulse-glow 4s ease-in-out infinite;
   }
 }
