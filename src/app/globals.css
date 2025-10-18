@@ -70,3 +70,23 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .cursor-glow {
+    background: radial-gradient(
+      600px circle at var(--x) var(--y),
+      hsla(var(--primary), 0.1),
+      transparent 80%
+    );
+  }
+  .header-glow {
+    -webkit-filter: drop-shadow(0 0 0.75rem hsla(var(--primary), 0.5));
+    filter: drop-shadow(0 0 0.75rem hsla(var(--primary), 0.5));
+    -webkit-transition: all 0.3s;
+    transition: all 0.3s;
+  }
+  .header-glow:hover {
+    -webkit-filter: drop-shadow(0 0 1rem hsla(var(--primary), 0.7));
+    filter: drop-shadow(0 0 1rem hsla(var(--primary), 0.7));
+  }
+}

@@ -44,11 +44,11 @@ export default function Header() {
     <header
       className={cn(
         'sticky top-0 z-50 w-full transition-all duration-300',
-        isScrolled ? 'border-b bg-background/80 backdrop-blur-sm' : 'bg-background'
+        isScrolled ? 'border-b bg-background/80 backdrop-blur-sm' : 'bg-transparent'
       )}
     >
       <div className="container flex h-16 items-center">
-        <Link href="/" className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2 header-glow">
           <Image src="https://github.com/Gagansidh-u/My-Webapp/blob/master/Picsart_25-10-18_16-37-29-081.png?raw=true" alt="Next Analytics Logo" width={28} height={28} />
           <span className="text-lg font-bold">Next Analytics</span>
         </Link>
