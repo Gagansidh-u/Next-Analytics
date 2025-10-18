@@ -1,7 +1,7 @@
 'use client';
 
 import { BarChart, LineChart, PieChart, Database, AreaChart, GitBranch } from 'lucide-react';
-import { useMemo } from 'react';
+import { useState, useEffect } from 'react';
 
 const icons = [
     { icon: BarChart, size: 'h-8 w-8' },
@@ -22,22 +22,25 @@ const animationStyles = [
 ];
 
 export default function AnimatedHeroBackground() {
+    const [particles, setParticles] = useState<any[]>([]);
 
-    const particles = useMemo(() => Array.from({ length: 12 }).map((_, i) => {
-        const Icon = icons[i % icons.length].icon;
-        const size = icons[i % icons.length].size;
-        const animation = animationStyles[i % animationStyles.length];
-        const top = `${Math.random() * 80 + 10}%`;
-        const left = `${Math.random() * 90 + 5}%`;
-        const opacity = `${Math.floor(Math.random() * 4) + 2}0%`; // 20% to 50%
-        return {
-            id: i,
-            Icon,
-            size,
-            animation,
-            style: { top, left, opacity },
-        }
-    }), []);
+    useEffect(() => {
+        setParticles(Array.from({ length: 12 }).map((_, i) => {
+            const Icon = icons[i % icons.length].icon;
+            const size = icons[i % icons.length].size;
+            const animation = animationStyles[i % animationStyles.length];
+            const top = `${Math.random() * 80 + 10}%`;
+            const left = `${Math.random() * 90 + 5}%`;
+            const opacity = `${Math.floor(Math.random() * 4) + 2}0%`; // 20% to 50%
+            return {
+                id: i,
+                Icon,
+                size,
+                animation,
+                style: { top, left, opacity },
+            }
+        }));
+    }, []);
 
     return (
         <div aria-hidden="true" className="absolute inset-0 top-0 z-0 h-full w-full bg-accent/10 [mask-image:radial-gradient(100%_100%_at_top_right,white,transparent)]">
