@@ -73,10 +73,12 @@ body {
 
 @keyframes pulse-glow {
   0%, 100% {
-    filter: drop-shadow(0 0 0.75rem hsla(var(--primary), 0.5));
+    filter: drop-shadow(0 0 0.5rem hsla(var(--primary), 0.4));
+    text-shadow: 0 0 0.5rem hsla(var(--primary), 0.4);
   }
   50% {
-    filter: drop-shadow(0 0 1.5rem hsla(var(--primary), 0.8));
+    filter: drop-shadow(0 0 1.25rem hsla(var(--primary), 0.7));
+    text-shadow: 0 0 1.25rem hsla(var(--primary), 0.7);
   }
 }
 
