@@ -9,10 +9,10 @@ export default function CursorGlow() {
       document.body.style.setProperty('--y', `${e.clientY}px`);
     };
 
-    document.body.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mousemove', handleMouseMove);
 
     return () => {
-      document.body.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mousemove', handleMouseMove);
     };
   }, []);
 
