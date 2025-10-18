@@ -1,3 +1,46 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero-background",
+      "description": "Abstract data visualization background",
+      "imageUrl": "https://images.unsplash.com/photo-1479292889369-1a48f234247e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxkYXRhJTIwYWJzdHJhY3R8ZW58MHx8fHwxNzYwNzQyODI0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "data abstract"
+    },
+    {
+      "id": "testimonial-1",
+      "description": "Portrait of a smiling person",
+      "imageUrl": "https://images.unsplash.com/photo-1600180758890-6b94519a8ba6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxwZXJzb24lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NjA3MzA4MTF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "person portrait"
+    },
+    {
+      "id": "testimonial-2",
+      "description": "Portrait of a smiling person",
+      "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxwZXJzb24lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NjA3MzA4MTF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "person portrait"
+    },
+    {
+      "id": "testimonial-3",
+      "description": "Portrait of a smiling person",
+      "imageUrl": "https://images.unsplash.com/photo-1540569014015-19a7be504e3a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxwZXJzb24lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NjA3MzA4MTF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "person portrait"
+    },
+    {
+      "id": "how-it-works-1",
+      "description": "Illustration of file upload",
+      "imageUrl": "https://images.unsplash.com/photo-1758780691544-d11ce61aae47?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHx1cGxvYWQlMjBkYXRhfGVufDB8fHx8MTc2MDc3OTE5MHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "upload data"
+    },
+    {
+      "id": "how-it-works-2",
+      "description": "Illustration of data analysis",
+      "imageUrl": "https://images.unsplash.com/photo-1628348068343-c6a848d2b6dd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxhbmFseXNpcyUyMGNoYXJ0c3xlbnwwfHx8fDE3NjA3NzkxOTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "analysis charts"
+    },
+    {
+      "id": "how-it-works-3",
+      "description": "Illustration of a dashboard report",
+      "imageUrl": "https://images.unsplash.com/photo-1698258828128-44d234066a9b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxkYXNoYm9hcmQlMjByZXBvcnR8ZW58MHx8fHwxNzYwNzc5MTkwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "dashboard report"
+    }
+  ]
 }
