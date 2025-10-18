@@ -259,7 +259,7 @@ export default function CheckoutForm() {
                 <CardContent>
                     <div className="flex space-x-2">
                         <Input 
-                            placeholder="Enter code 'OFFNEXT25'" 
+                            placeholder="Enter coupon code" 
                             value={couponCode} 
                             onChange={(e) => setCouponCode(e.target.value)}
                         />
