@@ -18,13 +18,13 @@ export default function Footer() {
               Actionable insights for data-driven teams.
             </p>
             <div className="mt-6 flex space-x-4">
-              <Link href="#" className="text-muted-foreground hover:text-foreground">
+              <Link href="/social" className="text-muted-foreground hover:text-foreground">
                 <Twitter className="h-5 w-5" />
               </Link>
-              <Link href="#" className="text-muted-foreground hover:text-foreground">
+              <Link href="/social" className="text-muted-foreground hover:text-foreground">
                 <Linkedin className="h-5 w-5" />
               </Link>
-              <Link href="#" className="text-muted-foreground hover:text-foreground">
+              <Link href="/social" className="text-muted-foreground hover:text-foreground">
                 <Github className="h-5 w-5" />
               </Link>
             </div>
