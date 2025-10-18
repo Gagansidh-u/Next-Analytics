@@ -78,14 +78,7 @@ export default function CheckoutForm() {
   const applyCoupon = useCallback(() => {
     const upperCaseCoupon = couponCode.toUpperCase();
 
-    if (upperCaseCoupon === 'OFFNEXT25') {
-      setDiscount(0.25);
-      setIsPay1Coupon(false);
-      toast({
-        title: 'Coupon Applied!',
-        description: 'You received a 25% discount.',
-      });
-    } else if (upperCaseCoupon === 'OFFNEXT15') {
+    if (upperCaseCoupon === 'OFFNEXT15') {
       setDiscount(0.15);
       setIsPay1Coupon(false);
       toast({
