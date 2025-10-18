@@ -142,9 +142,9 @@ export default function CheckoutForm() {
       handler: function (response: any) {
         toast({
           title: 'Payment Successful!',
-          description: 'Thank you for your purchase. Redirecting you to the homepage.',
+          description: 'Thank you for your purchase. You will be redirected shortly.',
         });
-        router.push('/');
+        window.location.href = 'https://forms.gle/a8Yhowx9EutCwbcw7';
       },
       prefill: {
         name: data.name,
