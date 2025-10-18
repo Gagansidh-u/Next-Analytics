@@ -23,6 +23,7 @@ const plans = [
       { text: 'No live dashboard updates', included: false },
     ],
     cta: 'Choose Basic',
+    href: '/checkout?plan=basic'
   },
   {
     id: 'professional',
@@ -42,6 +43,7 @@ const plans = [
     ],
     cta: 'Choose Professional',
     popular: true,
+    href: '/coming-soon'
   },
   {
     id: 'enterprise',
@@ -60,6 +62,7 @@ const plans = [
     ],
     cta: 'Contact Sales',
     isEnterprise: true,
+    href: '/coming-soon'
   },
 ];
 
@@ -108,7 +111,7 @@ export default function Pricing() {
               </CardContent>
               <CardFooter className="flex-col items-stretch gap-4">
                  <Button asChild className="w-full" variant={plan.popular ? 'default' : 'outline'}>
-                    <Link href={plan.isEnterprise ? '/enterprise' : `/checkout?plan=${plan.id}`}>
+                    <Link href={plan.href}>
                       {plan.cta}
                     </Link>
                 </Button>
