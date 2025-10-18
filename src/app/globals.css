@@ -71,6 +71,15 @@ body {
   }
 }
 
+@keyframes pulse-glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 0.75rem hsla(var(--primary), 0.5));
+  }
+  50% {
+    filter: drop-shadow(0 0 1.5rem hsla(var(--primary), 0.8));
+  }
+}
+
 @layer components {
   .cursor-glow {
     background: radial-gradient(
@@ -80,10 +89,6 @@ body {
     );
   }
   .header-glow {
-    filter: drop-shadow(0 0 0.75rem hsla(var(--primary), 0.5));
-    transition: all 0.3s;
-  }
-  .header-glow:hover {
-    filter: drop-shadow(0 0 1rem hsla(var(--primary), 0.7));
+    animation: pulse-glow 3s ease-in-out infinite;
   }
 }
