@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { Menu } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -67,6 +67,8 @@ export default function Header() {
               </Button>
             </SheetTrigger>
             <SheetContent side="left">
+              <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+              <SheetDescription className="sr-only">Main navigation links for the site.</SheetDescription>
               <div className="flex h-full flex-col">
                 <div className="mb-8 flex items-center gap-2">
                    <Image src="/logo.png" alt="Next Analytics Logo" width={28} height={28} />
