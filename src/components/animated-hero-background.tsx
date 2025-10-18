@@ -31,7 +31,7 @@ export default function AnimatedHeroBackground() {
             const animation = animationStyles[i % animationStyles.length];
             const top = `${Math.random() * 80 + 10}%`;
             const left = `${Math.random() * 90 + 5}%`;
-            const opacity = `${Math.floor(Math.random() * 4) + 2}0%`; // 20% to 50%
+            const opacity = `${Math.floor(Math.random() * 4) + 4}0%`; // 40% to 70%
             return {
                 id: i,
                 Icon,
@@ -55,7 +55,7 @@ export default function AnimatedHeroBackground() {
                 {particles.map(particle => (
                     <particle.Icon
                         key={particle.id}
-                        className={`absolute text-primary/30 ${particle.size} ${particle.animation}`}
+                        className={`absolute text-primary/50 ${particle.size} ${particle.animation}`}
                         style={particle.style}
                     />
                 ))}
