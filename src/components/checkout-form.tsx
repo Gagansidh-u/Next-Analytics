@@ -85,6 +85,13 @@ export default function CheckoutForm() {
         title: 'Coupon Applied!',
         description: 'You received a 25% discount.',
       });
+    } else if (upperCaseCoupon === 'OFFNEXT15') {
+      setDiscount(0.15);
+      setIsPay1Coupon(false);
+      toast({
+        title: 'Coupon Applied!',
+        description: 'You received a 15% discount.',
+      });
     } else if (upperCaseCoupon === 'PAY1') {
       setDiscount(0);
       setIsPay1Coupon(true);
@@ -261,9 +268,9 @@ export default function CheckoutForm() {
                       <span>-₹{(plan.price - 1).toLocaleString()}</span>
                   </div>
                 )}
-                {discount > 0 && (
+                {discount > 0 && !isPay1Coupon && (
                 <div className="flex justify-between text-green-500">
-                    <span>Discount (25%)</span>
+                    <span>Discount ({(discount * 100).toFixed(0)}%)</span>
                     <span>-₹{(plan.price * discount).toLocaleString()}</span>
                 </div>
                 )}
