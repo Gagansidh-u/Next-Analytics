@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils';
 const plans = [
   {
     name: 'Basic',
-    price: 'Starts at $199',
+    price: '₹5000',
     description: 'Perfect for startups and small businesses who want simple and clear insights.',
     features: [
       { text: 'Up to 10,000 data rows', included: true },
@@ -22,11 +22,10 @@ const plans = [
       { text: 'No live dashboard updates', included: false },
     ],
     cta: 'Choose Basic',
-    delivery: '3-4 business days',
   },
   {
     name: 'Professional',
-    price: 'Starts at $499',
+    price: '₹12000',
     description: 'A complete business intelligence solution for growing teams.',
     features: [
       { text: 'Up to 100,000 data rows', included: true },
@@ -41,7 +40,6 @@ const plans = [
     ],
     cta: 'Choose Professional',
     popular: true,
-    delivery: '5-7 business days',
   },
   {
     name: 'Enterprise',
@@ -59,7 +57,6 @@ const plans = [
     ],
     cta: 'Contact Sales',
     isEnterprise: true,
-    delivery: '7-14 business days',
   },
 ];
 
@@ -112,9 +109,6 @@ export default function Pricing() {
                       {plan.cta}
                     </Link>
                 </Button>
-                <p className="text-center text-xs text-muted-foreground">
-                  Delivery in {plan.delivery}
-                </p>
               </CardFooter>
             </Card>
           ))}
