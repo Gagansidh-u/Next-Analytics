@@ -104,7 +104,7 @@ export default function Pricing() {
             Choose the perfect plan for your business. No hidden fees, no surprises.
           </p>
         </div>
-        <div className="mt-12 grid grid-cols-1 gap-8 lg:grid-cols-3">
+        <div className="mt-12 mx-auto grid max-w-5xl grid-cols-1 gap-8 md:grid-cols-2">
           {plans.map((plan, index) => (
             <div
               key={plan.name}
