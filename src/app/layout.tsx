@@ -5,9 +5,45 @@ import { cn } from '@/lib/utils';
 import CursorGlow from '@/components/cursor-glow';
 import Script from 'next/script';
 
+const siteUrl = 'https://your-domain.com'; // Replace with your actual domain
+
 export const metadata: Metadata = {
-  title: 'Next Analytics | Turn Data into Revenue',
-  description: 'Simple, fast, and affordable data analytics for startups and SMBs. We turn your raw data into actionable insights, dashboards, and reports.',
+  title: 'Next Analytics | Actionable Data Insights for Startups & SMBs',
+  description: 'Simple, fast, and affordable data analytics for startups and SMBs. We turn your raw data into actionable insights, interactive dashboards, and AI-powered reports to drive revenue.',
+  applicationName: 'Next Analytics',
+  keywords: ['data analytics', 'business intelligence', 'startup analytics', 'smb data', 'dashboard reporting', 'data insights', 'revenue growth'],
+  authors: [{ name: 'Next Analytics' }],
+  creator: 'Next Analytics',
+  metadataBase: new URL(siteUrl),
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    type: 'website',
+    url: '/',
+    title: 'Next Analytics | Turn Data into Revenue',
+    description: 'Affordable, fast data analytics to help startups & SMBs make data-driven decisions and grow revenue.',
+    siteName: 'Next Analytics',
+    images: [
+      {
+        url: '/og-image.png', // It's recommended to create and add an og-image.png file to your public folder
+        width: 1200,
+        height: 630,
+        alt: 'Next Analytics turning data into revenue',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Next Analytics | Turn Data into Revenue',
+    description: 'Affordable, fast data analytics to help startups & SMBs make data-driven decisions and grow revenue.',
+    images: ['/og-image.png'], // Ensure you have this image in your public folder
+  },
+  icons: {
+    icon: '/favicon.png', // It's recommended to add a favicon.png to your public folder
+    apple: '/apple-touch-icon.png', // It's recommended to add an apple-touch-icon.png to your public folder
+  },
+  manifest: '/manifest.json',
 };
 
 export default function RootLayout({

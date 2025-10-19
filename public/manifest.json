@@ -1,0 +1,21 @@
+{
+  "name": "Next Analytics | Turn Data into Revenue",
+  "short_name": "Next Analytics",
+  "description": "Simple, fast, and affordable data analytics for startups and SMBs. We turn your raw data into actionable insights, dashboards, and reports.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a101e",
+  "theme_color": "#22c55e",
+  "icons": [
+    {
+      "src": "https://github.com/Gagansidh-u/My-Webapp/blob/master/Picsart_25-10-18_16-37-29-081.png?raw=true",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://github.com/Gagansidh-u/My-Webapp/blob/master/Picsart_25-10-18_16-37-29-081.png?raw=true",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
