@@ -90,7 +90,7 @@ export default function ContactPage() {
                   <CardDescription>Come visit us in person.</CardDescription>
                 </CardHeader>
                 <CardContent className="flex flex-1 flex-col justify-center">
-                  <p className="text-lg font-semibold">123 Tech Street, Barnala, Punjab 148101</p>
+                  <p className="text-lg font-semibold">Barnala, Punjab 148101</p>
                 </CardContent>
                 <div className="p-6 pt-0">
                   <Button asChild className="w-full" variant="outline">
