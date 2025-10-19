@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Twitter, Linkedin, Github } from 'lucide-react';
+import { Twitter, Linkedin, Github, MapPin } from 'lucide-react';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -15,7 +15,7 @@ export default function Footer() {
               <span className="text-xl font-bold">Next Analytics</span>
             </div>
             <p className="mt-4 text-sm text-muted-foreground">
-              Actionable insights for data-driven teams.
+              Actionable insights for data-driven teams in Barnala, Punjab.
             </p>
             <div className="mt-6 flex space-x-4">
               <Link href="/social" className="text-muted-foreground hover:text-foreground">
@@ -63,6 +63,10 @@ export default function Footer() {
         </div>
         <div className="mt-8 border-t pt-8 text-center text-sm text-muted-foreground">
           <p>&copy; {currentYear} Next Analytics, Inc. All rights reserved.</p>
+           <div className="flex items-center justify-center gap-1 pt-2">
+             <MapPin className="h-4 w-4"/>
+            <span>Barnala, Punjab, India</span>
+           </div>
         </div>
       </div>
     </footer>

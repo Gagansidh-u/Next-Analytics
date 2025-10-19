@@ -8,10 +8,10 @@ import Script from 'next/script';
 const siteUrl = 'https://nextanalytics.store';
 
 export const metadata: Metadata = {
-  title: 'Next Analytics | Actionable Data Insights for Startups & SMBs',
-  description: 'Simple, fast, and affordable data analytics for startups and SMBs. We turn your raw data into actionable insights, interactive dashboards, and AI-powered reports to drive revenue.',
+  title: 'Next Analytics | Data Analytics in Barnala, Punjab',
+  description: 'Top data analytics and business intelligence services in Barnala, Punjab. We help startups and SMBs in Punjab turn raw data into actionable insights and revenue.',
   applicationName: 'Next Analytics',
-  keywords: ['data analytics', 'business intelligence', 'startup analytics', 'smb data', 'dashboard reporting', 'data insights', 'revenue growth'],
+  keywords: ['data analytics Barnala', 'business intelligence Punjab', 'startup analytics Barnala', 'smb data Punjab', 'dashboard reporting', 'data insights', 'Next Analytics Barnala'],
   authors: [{ name: 'Next Analytics' }],
   creator: 'Next Analytics',
   metadataBase: new URL(siteUrl),
@@ -21,22 +21,26 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     url: '/',
-    title: 'Next Analytics | Turn Data into Revenue',
-    description: 'Affordable, fast data analytics to help startups & SMBs make data-driven decisions and grow revenue.',
+    title: 'Next Analytics | Data Analytics in Barnala, Punjab',
+    description: 'Affordable, fast data analytics in Barnala to help startups & SMBs in Punjab make data-driven decisions.',
     siteName: 'Next Analytics',
     images: [
       {
         url: '/og-image.png', // It's recommended to create and add an og-image.png file to your public folder
         width: 1200,
         height: 630,
-        alt: 'Next Analytics turning data into revenue',
+        alt: 'Next Analytics turning data into revenue in Barnala',
       },
     ],
+    locale: 'en_IN',
+    countryName: 'India',
+    locality: 'Barnala',
+    region: 'Punjab',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Next Analytics | Turn Data into Revenue',
-    description: 'Affordable, fast data analytics to help startups & SMBs make data-driven decisions and grow revenue.',
+    title: 'Next Analytics | Data Analytics in Barnala, Punjab',
+    description: 'Affordable, fast data analytics in Barnala to help startups & SMBs in Punjab make data-driven decisions.',
     images: ['/og-image.png'], // Ensure you have this image in your public folder
   },
   icons: {

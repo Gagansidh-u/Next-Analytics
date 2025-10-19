@@ -1,6 +1,6 @@
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
-import { Mail, Phone, MessageSquare } from 'lucide-react';
+import { Mail, Phone, MessageSquare, MapPin } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -56,10 +56,10 @@ export default function ContactPage() {
               Get in Touch
             </h1>
             <p className="mt-6 text-lg text-foreground/70">
-              We're here to help and answer any question you might have. We look forward to hearing from you!
+              We're here to help and answer any question you might have. We are proudly based in Barnala, Punjab.
             </p>
           </div>
-          <div className="mx-auto mt-16 grid max-w-5xl grid-cols-1 gap-8 md:grid-cols-3">
+          <div className="mx-auto mt-16 grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
             {contactMethods.map((method) => (
               <Card key={method.title} className="flex flex-col text-center">
                 <CardHeader>
@@ -81,6 +81,25 @@ export default function ContactPage() {
                 </div>
               </Card>
             ))}
+             <Card className="flex flex-col text-center">
+                <CardHeader>
+                  <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
+                    <MapPin className="h-8 w-8 text-primary" />
+                  </div>
+                  <CardTitle className="pt-4">Our Office</CardTitle>
+                  <CardDescription>Come visit us in person.</CardDescription>
+                </CardHeader>
+                <CardContent className="flex flex-1 flex-col justify-center">
+                  <p className="text-lg font-semibold">123 Tech Street, Barnala, Punjab 148101</p>
+                </CardContent>
+                <div className="p-6 pt-0">
+                  <Button asChild className="w-full" variant="outline">
+                    <Link href="https://www.google.com/maps/search/?api=1&query=Barnala+Punjab" target="_blank" rel="noopener noreferrer">
+                      Get Directions
+                    </Link>
+                  </Button>
+                </div>
+              </Card>
           </div>
         </div>
       </main>
