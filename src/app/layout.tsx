@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 import CursorGlow from '@/components/cursor-glow';
 import Script from 'next/script';
 
-const siteUrl = 'https://your-domain.com'; // Replace with your actual domain
+const siteUrl = 'https://nextanalytics.store';
 
 export const metadata: Metadata = {
   title: 'Next Analytics | Actionable Data Insights for Startups & SMBs',

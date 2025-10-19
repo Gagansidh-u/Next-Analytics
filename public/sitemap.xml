@@ -1,67 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://next-analytics.com/</loc>
-    <lastmod>2024-07-26</lastmod>
-    <priority>1.00</priority>
+    <loc>https://nextanalytics.store</loc>
+    <lastmod>2024-07-15</lastmod>
+    <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://next-analytics.com/#features</loc>
-    <lastmod>2024-07-26</lastmod>
-    <priority>0.90</priority>
+    <loc>https://nextanalytics.store/about</loc>
+    <lastmod>2024-07-15</lastmod>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://next-analytics.com/#pricing</loc>
-    <lastmod>2024-07-26</lastmod>
-    <priority>0.90</priority>
+    <loc>https://nextanalytics.store/contact</loc>
+    <lastmod>2024-07-15</lastmod>
+    <priority>0.8</priority>
+  </url>
+    <url>
+    <loc>https://nextanalytics.store/careers</loc>
+    <lastmod>2024-07-15</lastmod>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://next-analytics.com/#testimonials</loc>
-    <lastmod>2024-07-26</lastmod>
-    <priority>0.90</priority>
+    <loc>https://nextanalytics.store/privacy</loc>
+    <lastmod>2024-07-15</lastmod>
+    <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://next-analytics.com/#faq</loc>
-    <lastmod>2024-07-26</lastmod>
-    <priority>0.90</priority>
+    <loc>https://nextanalytics.store/terms</loc>
+    <lastmod>2024-07-15</lastmod>
+    <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://next-analytics.com/about</loc>
-    <lastmod>2024-07-26</lastmod>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://next-analytics.com/contact</loc>
-    <lastmod>20_24-07-26</lastmod>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://next-analytics.com/careers</loc>
-    <lastmod>2024-07-26</lastmod>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://next-analytics.com/checkout?plan=basic</loc>
-    <lastmod>2024-07-26</lastmod>
-    <priority>0.70</priority>
-  </url>
-  <url>
-    <loc>https://next-analytics.com/checkout?plan=professional</loc>
-    <lastmod>2024-07-26</lastmod>
-    <priority>0.70</priority>
+    <loc>https://nextanalytics.store/refund-policy</loc>
+    <lastmod>2024-07-15</lastmod>
+    <priority>0.5</priority>
   </url>
    <url>
-    <loc>https://next-analytics.com/terms</loc>
-    <lastmod>2024-07-26</lastmod>
-    <priority>0.50</priority>
+    <loc>https://nextanalytics.store/#features</loc>
+    <lastmod>2024-07-15</lastmod>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://next-analytics.com/privacy</loc>
-    <lastmod>2024-07-26</lastmod>
-    <priority>0.50</priority>
+    <loc>https://nextanalytics.store/#pricing</loc>
+    <lastmod>2024-07-15</lastmod>
+    <priority>0.9</priority>
   </url>
-   <url>
-    <loc>https://next-analytics.com/refund-policy</loc>
-    <lastmod>2024-07-26</lastmod>
-    <priority>0.50</priority>
+  <url>
+    <loc>https://nextanalytics.store/#testimonials</loc>
+    <lastmod>2024-07-15</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://nextanalytics.store/#faq</loc>
+    <lastmod>2024-07-15</lastmod>
+    <priority>0.9</priority>
   </url>
 </urlset>
