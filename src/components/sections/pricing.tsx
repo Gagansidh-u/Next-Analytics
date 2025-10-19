@@ -26,7 +26,6 @@ const plans = [
       { text: 'No live dashboard updates', included: false },
     ],
     cta: 'Choose Basic',
-    popular: true,
     href: '/checkout?plan=basic'
   },
   {
@@ -46,8 +45,8 @@ const plans = [
       { text: 'Priority Email & Chat support', included: true },
     ],
     cta: 'Choose Professional',
-    comingSoon: true,
-    href: '/coming-soon'
+    popular: true,
+    href: '/checkout?plan=professional'
   },
   {
     id: 'enterprise',
@@ -104,13 +103,19 @@ export default function Pricing() {
             Choose the perfect plan for your business. No hidden fees, no surprises.
           </p>
         </div>
-        <div className="mt-12 mx-auto grid max-w-5xl grid-cols-1 gap-8 md:grid-cols-2">
+        <div className="mt-12 mx-auto grid max-w-5xl grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {plans.map((plan, index) => (
             <div
               key={plan.name}
               className={cn(
                 'transition-all duration-500',
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4',
+                 // Make professional plan span 2 columns on lg screens, and enterprise takes the last spot
+                {
+                  'lg:col-span-1': plan.id === 'basic',
+                  'lg:col-span-1': plan.id === 'professional',
+                  'lg:col-span-1': plan.id === 'enterprise'
+                }
               )}
               style={{ transitionDelay: `${index * 150}ms` }}
             >
@@ -127,7 +132,7 @@ export default function Pricing() {
                       <Badge>Most Popular</Badge>
                     )}
                     {plan.comingSoon && (
-                       <Badge variant="outline">Coming Very Soon</Badge>
+                       <Badge variant="outline">Coming Soon</Badge>
                     )}
                   </div>
                   <CardDescription>{plan.description}</CardDescription>
