@@ -9,13 +9,13 @@ const testimonials = [
   {
     name: 'Sarah Johnson',
     title: 'CEO, TechNova',
-    quote: "Nextlytics turned our data into a goldmine. Their dashboards are intuitive and have directly led to a 15% increase in our conversion rates. It's the best investment we've made this year.",
+    quote: "Next Analytics turned our data into a goldmine. Their dashboards are intuitive and have directly led to a 15% increase in our conversion rates. It's the best investment we've made this year.",
     image: PlaceHolderImages.find(p => p.id === 'testimonial-1'),
   },
   {
     name: 'Michael Chen',
     title: 'Founder, StyleHub',
-    quote: "As a small business, we were drowning in spreadsheets. Nextlytics gave us clarity and a clear path to growth. The process was simple, and the results were beyond our expectations.",
+    quote: "As a small business, we were drowning in spreadsheets. Next Analytics gave us clarity and a clear path to growth. The process was simple, and the results were beyond our expectations.",
     image: PlaceHolderImages.find(p => p.id === 'testimonial-2'),
   },
   {

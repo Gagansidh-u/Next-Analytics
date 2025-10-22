@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { ArrowRight, Star } from 'lucide-react';
 import AnimatedHeroBackground from '@/components/animated-hero-background';
+import Image from 'next/image';
 
 export default function Hero() {
   return (

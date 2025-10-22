@@ -8,10 +8,10 @@ import Script from 'next/script';
 const siteUrl = 'https://nextanalytics.store';
 
 export const metadata: Metadata = {
-  title: 'Next Analytics | Data Analytics in Barnala, Punjab, India',
-  description: 'Top data analytics and business intelligence services in Barnala, Punjab, and India. We help startups and SMBs turn raw data into actionable insights and revenue.',
+  title: 'Next Analytics | Data Analytics in Barnala, Punjab, and India',
+  description: 'Next Analytics: Top data analytics and business intelligence services based in Barnala, Punjab. We help startups and SMBs across India turn raw data into actionable insights and revenue. Your top choice for Next Analytics in Punjab.',
   applicationName: 'Next Analytics',
-  keywords: ['data analytics Barnala', 'business intelligence Punjab', 'startup analytics India', 'smb data Punjab', 'dashboard reporting', 'data insights', 'Next Analytics Barnala', 'data analytics India'],
+  keywords: ['Next Analytics', 'Next Analytics Barnala', 'Next Analytics Punjab', 'Next Analytics India', 'data analytics Barnala', 'business intelligence Punjab', 'startup analytics India', 'smb data Punjab', 'dashboard reporting', 'data insights'],
   authors: [{ name: 'Next Analytics' }],
   creator: 'Next Analytics',
   metadataBase: new URL(siteUrl),
@@ -32,15 +32,15 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     url: '/',
-    title: 'Next Analytics | Data Analytics for India',
-    description: 'Affordable, fast data analytics in Barnala to help startups & SMBs in Punjab and across India make data-driven decisions.',
+    title: 'Next Analytics | Data Analytics for India, Punjab & Barnala',
+    description: 'Affordable, fast data analytics from Next Analytics in Barnala to help startups & SMBs in Punjab and across India make data-driven decisions.',
     siteName: 'Next Analytics',
     images: [
       {
         url: '/og-image.png', 
         width: 1200,
         height: 630,
-        alt: 'Next Analytics turning data into revenue in Barnala',
+        alt: 'Next Analytics turning data into revenue in Barnala, Punjab',
       },
     ],
     locale: 'en_IN',
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Next Analytics | Data Analytics in Barnala, Punjab, India',
-    description: 'Affordable, fast data analytics in Barnala to help startups & SMBs in Punjab and India make data-driven decisions.',
+    description: 'Affordable data analytics in Barnala by Next Analytics to help startups & SMBs in Punjab and India make data-driven decisions.',
     images: ['/og-image.png'],
   },
   icons: {
@@ -72,6 +72,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+        <meta name="robots" content="index, follow" />
       </head>
       <body className={cn("font-body antialiased")}>
         <Script
