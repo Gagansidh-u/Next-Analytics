@@ -85,13 +85,18 @@ export default {
         'scroll': {
           'from': { transform: 'translateX(0)' },
           'to': { transform: 'translateX(-50%)' },
-        }
+        },
+        'pulse-slow': {
+          '0%, 100%': { opacity: '0.7', transform: 'scale(1)' },
+          '50%': { opacity: '1', transform: 'scale(1.05)' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         'float': 'float 12s ease-in-out infinite',
         'scroll': 'scroll 60s linear infinite',
+        'pulse-slow': 'pulse-slow 5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
       },
     },
   },
