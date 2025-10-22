@@ -36,7 +36,7 @@ const contactMethods = [
     ),
     title: 'WhatsApp',
     description: 'Chat with us for quick questions.',
-    details: '+91 12345 67890',
+    details: '+91 1234567890',
     cta: 'Start Chat',
     href: 'https://wa.me/911234567890',
   },
@@ -56,7 +56,7 @@ export default function ContactPage() {
               Get in Touch
             </h1>
             <p className="mt-6 text-lg text-foreground/70">
-              We're here to help and answer any question you might have. We are proudly based in Barnala, Punjab.
+              We're here to help and answer any question you might have. We are proudly based in Barnala, Punjab, India.
             </p>
           </div>
           <div className="mx-auto mt-16 grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">

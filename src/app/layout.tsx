@@ -8,10 +8,10 @@ import Script from 'next/script';
 const siteUrl = 'https://nextanalytics.store';
 
 export const metadata: Metadata = {
-  title: 'Next Analytics | Data Analytics in Barnala, Punjab',
-  description: 'Top data analytics and business intelligence services in Barnala, Punjab. We help startups and SMBs in Punjab turn raw data into actionable insights and revenue.',
+  title: 'Next Analytics | Data Analytics in Barnala, Punjab, India',
+  description: 'Top data analytics and business intelligence services in Barnala, Punjab, and India. We help startups and SMBs turn raw data into actionable insights and revenue.',
   applicationName: 'Next Analytics',
-  keywords: ['data analytics Barnala', 'business intelligence Punjab', 'startup analytics Barnala', 'smb data Punjab', 'dashboard reporting', 'data insights', 'Next Analytics Barnala'],
+  keywords: ['data analytics Barnala', 'business intelligence Punjab', 'startup analytics India', 'smb data Punjab', 'dashboard reporting', 'data insights', 'Next Analytics Barnala', 'data analytics India'],
   authors: [{ name: 'Next Analytics' }],
   creator: 'Next Analytics',
   metadataBase: new URL(siteUrl),
@@ -32,8 +32,8 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     url: '/',
-    title: 'Next Analytics | Data Analytics in Barnala, Punjab',
-    description: 'Affordable, fast data analytics in Barnala to help startups & SMBs in Punjab make data-driven decisions.',
+    title: 'Next Analytics | Data Analytics for India',
+    description: 'Affordable, fast data analytics in Barnala to help startups & SMBs in Punjab and across India make data-driven decisions.',
     siteName: 'Next Analytics',
     images: [
       {
@@ -50,8 +50,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Next Analytics | Data Analytics in Barnala, Punjab',
-    description: 'Affordable, fast data analytics in Barnala to help startups & SMBs in Punjab make data-driven decisions.',
+    title: 'Next Analytics | Data Analytics in Barnala, Punjab, India',
+    description: 'Affordable, fast data analytics in Barnala to help startups & SMBs in Punjab and India make data-driven decisions.',
     images: ['/og-image.png'],
   },
   icons: {
