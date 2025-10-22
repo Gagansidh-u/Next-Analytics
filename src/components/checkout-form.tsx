@@ -27,7 +27,7 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-const RAZORPAY_KEY = 'rzp_live_RSm2UNwErs0ra1';
+const RAZORPAY_KEY = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
 
 declare global {
     interface Window {
@@ -128,8 +128,32 @@ export default function CheckoutForm() {
     }
   }
 
+  const verifyPayment = async (data: any) => {
+    try {
+      const response = await fetch('/api/payment-verification', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+
+      return await response.json();
+    } catch (error) {
+      console.error('Payment verification error:', error);
+      return { success: false, message: 'Could not verify payment.' };
+    }
+  };
+
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsLoading(true);
+    if (!RAZORPAY_KEY) {
+       toast({
+        variant: 'destructive',
+        title: 'Configuration Error',
+        description: 'Razorpay Key ID is not configured. Please contact support.',
+      });
+      setIsLoading(false);
+      return;
+    }
     if ((!plan && !isPay1Coupon) || (total <= 0 && !isPay1Coupon) || !isRazorpayLoaded) {
       toast({
         variant: 'destructive',
@@ -155,12 +179,29 @@ export default function CheckoutForm() {
       description: `Payment for ${plan?.name}`,
       image: 'https://github.com/Gagansidh-u/My-Webapp/blob/master/Picsart_25-10-18_16-37-29-081.png?raw=true',
       order_id: order.id,
-      handler: function (response: any) {
-        toast({
-          title: 'Payment Successful!',
-          description: 'Thank you for your purchase. You will be redirected shortly.',
-        });
-        window.location.href = 'https://forms.gle/a8Yhowx9EutCwbcw7';
+      handler: async function (response: any) {
+        const verificationData = {
+          razorpay_payment_id: response.razorpay_payment_id,
+          razorpay_order_id: response.razorpay_order_id,
+          razorpay_signature: response.razorpay_signature,
+        };
+
+        const result = await verifyPayment(verificationData);
+
+        if (result.success) {
+          toast({
+            title: 'Payment Successful!',
+            description: 'Thank you for your purchase. You will be redirected shortly.',
+          });
+          window.location.href = 'https://forms.gle/a8Yhowx9EutCwbcw7';
+        } else {
+          toast({
+            variant: 'destructive',
+            title: 'Payment Verification Failed',
+            description: result.message || 'Please contact support.',
+          });
+          setIsLoading(false);
+        }
       },
       prefill: {
         name: data.name,
@@ -294,3 +335,5 @@ export default function CheckoutForm() {
     </>
   );
 }
+
+    
