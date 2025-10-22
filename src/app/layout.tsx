@@ -18,6 +18,17 @@ export const metadata: Metadata = {
   alternates: {
     canonical: '/',
   },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
   openGraph: {
     type: 'website',
     url: '/',
@@ -26,7 +37,7 @@ export const metadata: Metadata = {
     siteName: 'Next Analytics',
     images: [
       {
-        url: '/og-image.png', // It's recommended to create and add an og-image.png file to your public folder
+        url: '/og-image.png', 
         width: 1200,
         height: 630,
         alt: 'Next Analytics turning data into revenue in Barnala',
@@ -41,11 +52,11 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Next Analytics | Data Analytics in Barnala, Punjab',
     description: 'Affordable, fast data analytics in Barnala to help startups & SMBs in Punjab make data-driven decisions.',
-    images: ['/og-image.png'], // Ensure you have this image in your public folder
+    images: ['/og-image.png'],
   },
   icons: {
-    icon: '/favicon.png', // It's recommended to add a favicon.png to your public folder
-    apple: '/apple-touch-icon.png', // It's recommended to add an apple-touch-icon.png to your public folder
+    icon: '/favicon.png',
+    apple: '/apple-touch-icon.png',
   },
   manifest: '/manifest.json',
 };
