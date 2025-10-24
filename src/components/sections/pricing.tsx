@@ -136,10 +136,10 @@ export default function Pricing() {
                     )}
                   </div>
                   <CardDescription>{plan.description}</CardDescription>
-                  <div className="pt-4">
+                  <div className="pt-4 flex items-baseline gap-2">
                     <span className="text-4xl font-bold">{plan.price}</span>
                     {plan.price !== 'Custom' && (
-                        <p className="text-xs text-muted-foreground mt-1">+GST</p>
+                        <span className="text-sm text-muted-foreground">+GST</span>
                     )}
                   </div>
                 </CardHeader>
