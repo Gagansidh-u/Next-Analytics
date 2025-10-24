@@ -102,6 +102,9 @@ export default function Pricing() {
           <p className="mt-4 text-lg text-foreground/70">
             Choose the perfect plan for your business. No hidden fees, no surprises.
           </p>
+          <p className="mt-2 text-sm text-muted-foreground">
+            All prices are inclusive of 18% GST.
+          </p>
         </div>
         <div className="mt-12 mx-auto grid max-w-5xl grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {plans.map((plan, index) => (
