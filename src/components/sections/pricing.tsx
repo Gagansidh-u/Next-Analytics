@@ -17,7 +17,7 @@ const plans = [
     features: [
       { text: 'Up to 10,000 data rows', included: true },
       { text: 'Single data source', included: true },
-      { text: 'One interactive dashboard', included: true },
+      { text: '1 Basic Dashboard', included: true },
       { text: '5 Standard Charts', included: true },
       { text: 'Data cleaning & formatting', included: true },
       { text: 'PDF Summary Report', included: true },
@@ -36,7 +36,7 @@ const plans = [
     features: [
       { text: 'Up to 100,000 data rows', included: true },
       { text: 'Multiple data sources', included: true },
-      { text: '3 interactive dashboards', included: true },
+      { text: '1 Interactive Dashboard Per Order', included: true },
       { text: 'Advanced KPI metrics', included: true },
       { text: 'Drill-down filters & slicers', included: true },
       { text: 'Trend analysis + Forecasting', included: true },
@@ -102,9 +102,6 @@ export default function Pricing() {
           <p className="mt-4 text-lg text-foreground/70">
             Choose the perfect plan for your business. No hidden fees, no surprises.
           </p>
-          <p className="mt-2 text-sm text-muted-foreground">
-            All prices are inclusive of 18% GST.
-          </p>
         </div>
         <div className="mt-12 mx-auto grid max-w-5xl grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {plans.map((plan, index) => (
@@ -141,6 +138,9 @@ export default function Pricing() {
                   <CardDescription>{plan.description}</CardDescription>
                   <div className="pt-4">
                     <span className="text-4xl font-bold">{plan.price}</span>
+                    {plan.price !== 'Custom' && (
+                        <p className="text-xs text-muted-foreground mt-1">(inclusive of 18% GST)</p>
+                    )}
                   </div>
                 </CardHeader>
                 <CardContent className="flex-1">
