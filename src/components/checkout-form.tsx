@@ -28,6 +28,7 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 const RAZORPAY_KEY = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
+const GST_RATE = 0.18;
 
 declare global {
     interface Window {
@@ -44,6 +45,7 @@ export default function CheckoutForm() {
   const [plan, setPlan] = useState<{ name: string; price: number } | null>(null);
   const [discount, setDiscount] = useState(0);
   const [isPay1Coupon, setIsPay1Coupon] = useState(false);
+  const [gst, setGst] = useState(0);
   const [total, setTotal] = useState(0);
   const [couponCode, setCouponCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -62,10 +64,13 @@ export default function CheckoutForm() {
   useEffect(() => {
     if (plan) {
       if (isPay1Coupon) {
+        setGst(0);
         setTotal(1);
       } else {
-        const newTotal = plan.price * (1 - discount);
-        setTotal(newTotal);
+        const subtotalAfterDiscount = plan.price * (1 - discount);
+        const gstAmount = subtotalAfterDiscount * GST_RATE;
+        setGst(gstAmount);
+        setTotal(subtotalAfterDiscount + gstAmount);
       }
     }
   }, [plan, discount, isPay1Coupon]);
@@ -110,7 +115,7 @@ export default function CheckoutForm() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ amount: amount * 100 }), // Amount in paise
+            body: JSON.stringify({ amount: Math.round(amount * 100) }), // Amount in paise
         });
         if (!response.ok) {
             throw new Error('Failed to create order');
@@ -278,7 +283,7 @@ export default function CheckoutForm() {
                   {isLoading ? (
                     <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Processing...</>
                   ) : (
-                    <><CreditCard className="mr-2 h-4 w-4" /> Pay ₹{total.toLocaleString()}</>
+                    <><CreditCard className="mr-2 h-4 w-4" /> Pay ₹{total.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</>
                   )}
                 </Button>
               </form>
@@ -294,23 +299,32 @@ export default function CheckoutForm() {
             <CardContent className="space-y-4">
                 <div className="flex justify-between">
                 <span>{plan.name}</span>
-                <span>₹{plan.price.toLocaleString()}</span>
+                <span>₹{plan.price.toLocaleString('en-IN')}</span>
                 </div>
-                {isPay1Coupon && (
+                
+                {isPay1Coupon ? (
                   <div className="flex justify-between text-green-500">
                       <span>PAY1 Coupon</span>
-                      <span>-₹{(plan.price - 1).toLocaleString()}</span>
+                      <span>-₹{(plan.price + (plan.price * GST_RATE) - 1).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                   </div>
+                ) : (
+                  <>
+                    {discount > 0 && (
+                      <div className="flex justify-between text-green-500">
+                        <span>Discount ({(discount * 100).toFixed(0)}%)</span>
+                        <span>-₹{(plan.price * discount).toLocaleString('en-IN')}</span>
+                      </div>
+                    )}
+                    <div className="flex justify-between">
+                        <span>GST (18%)</span>
+                        <span>+₹{gst.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                    </div>
+                  </>
                 )}
-                {discount > 0 && !isPay1Coupon && (
-                <div className="flex justify-between text-green-500">
-                    <span>Discount ({(discount * 100).toFixed(0)}%)</span>
-                    <span>-₹{(plan.price * discount).toLocaleString()}</span>
-                </div>
-                )}
+
                 <div className="border-t pt-4 flex justify-between font-bold text-lg">
                 <span>Total</span>
-                <span>₹{total.toLocaleString()}</span>
+                <span>₹{total.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
             </CardContent>
             </Card>
@@ -335,5 +349,3 @@ export default function CheckoutForm() {
     </>
   );
 }
-
-    

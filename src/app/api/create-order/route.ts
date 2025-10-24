@@ -15,7 +15,7 @@ export async function POST(request: Request) {
   });
 
   const options = {
-    amount, // amount in the smallest currency unit
+    amount: Math.round(amount), // amount in the smallest currency unit (paise)
     currency: 'INR',
     receipt: `receipt_order_${new Date().getTime()}`,
   };
