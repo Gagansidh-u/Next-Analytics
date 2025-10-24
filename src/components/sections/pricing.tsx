@@ -139,7 +139,7 @@ export default function Pricing() {
                   <div className="pt-4">
                     <span className="text-4xl font-bold">{plan.price}</span>
                     {plan.price !== 'Custom' && (
-                        <p className="text-xs text-muted-foreground mt-1">(inclusive of 18% GST)</p>
+                        <p className="text-xs text-muted-foreground mt-1">+GST</p>
                     )}
                   </div>
                 </CardHeader>
