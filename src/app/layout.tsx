@@ -69,9 +69,37 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    name: 'Next Analytics',
+    url: siteUrl,
+    logo: `${siteUrl}/android-chrome-512x512.png`,
+    image: `${siteUrl}/og-image.png`,
+    description: metadata.description,
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: 'Barnala',
+      addressLocality: 'Barnala',
+      addressRegion: 'Punjab',
+      postalCode: '148101',
+      addressCountry: 'IN',
+    },
+    telephone: '+91-12345-67890',
+    sameAs: [
+        'https://nextanalytics.store/'
+    ]
+  };
+
+
   return (
     <html lang="en" className="dark">
       <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
