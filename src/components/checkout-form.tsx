@@ -11,10 +11,19 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Ticket, CreditCard } from 'lucide-react';
+import { Loader2, Ticket, CreditCard, PartyPopper } from 'lucide-react';
 import Script from 'next/script';
 import { generateInvoice, InvoiceData } from '@/lib/invoice';
-
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import Link from 'next/link';
 
 const plans = {
   basic: { name: 'Basic Plan', price: 5000 },
@@ -54,7 +63,6 @@ export default function CheckoutForm() {
   const [couponCode, setCouponCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isRazorpayLoaded, setIsRazorpayLoaded] = useState(false);
-
 
   useEffect(() => {
     const selectedPlanId = searchParams.get('plan') as keyof typeof plans;
@@ -268,6 +276,7 @@ export default function CheckoutForm() {
       image: 'https://github.com/Gagansidh-u/My-Webapp/blob/master/Picsart_25-10-18_16-37-29-081.png?raw=true',
       order_id: order.id,
       handler: async (response: any) => {
+        setIsLoading(true);
         const verificationData = {
           razorpay_payment_id: response.razorpay_payment_id,
           razorpay_order_id: response.razorpay_order_id,
@@ -314,6 +323,7 @@ export default function CheckoutForm() {
     });
 
     rzp.open();
+    // Don't set isLoading to false here, as the handler will manage it.
   };
 
   if (!plan) {
