@@ -13,7 +13,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Ticket, CreditCard } from 'lucide-react';
 import Script from 'next/script';
-import { useFirestore } from '@/firebase';
 import { generateInvoice, InvoiceData } from '@/lib/invoice';
 
 
@@ -44,7 +43,6 @@ export default function CheckoutForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { toast } = useToast();
-  const firestore = useFirestore();
 
   const [planId, setPlanId] = useState<keyof typeof plans | null>(null);
   const [plan, setPlan] = useState<{ name: string; price: number } | null>(null);
@@ -329,7 +327,7 @@ export default function CheckoutForm() {
     if (isFreeCoupon) {
       return 'Get for Free';
     }
-    return <><CreditCard className="mr-2 h-4 w-4" /> Pay ₹{total.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</>;
+    return <><CreditCard className="mr-2 h-4 w-4" /> Pay ₹{total.toFixed(2)}</>;
   };
 
   return (
@@ -391,25 +389,25 @@ export default function CheckoutForm() {
             <CardContent className="space-y-4">
                 <div className="flex justify-between">
                 <span>{plan.name}</span>
-                <span>₹{plan.price.toLocaleString('en-IN')}</span>
+                <span>₹{plan.price.toFixed(2)}</span>
                 </div>
                 
                 {isFreeCoupon ? (
                   <div className="flex justify-between text-green-500">
                     <span>100% Discount ("25072005")</span>
-                    <span>-₹{plan.price.toLocaleString('en-IN')}</span>
+                    <span>-₹{plan.price.toFixed(2)}</span>
                   </div>
                 ) : isPay1Coupon ? (
                   <div className="flex justify-between text-green-500">
                       <span>PAY1 Coupon</span>
-                      <span>-₹{(plan.price * (1+GST_RATE) - 1).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                      <span>-₹{(plan.price * (1+GST_RATE) - 1).toFixed(2)}</span>
                   </div>
                 ) : (
                   <>
                     {discount > 0 && (
                       <div className="flex justify-between text-green-500">
                         <span>Discount ({(discount * 100).toFixed(0)}%)</span>
-                        <span>-₹{(plan.price * discount).toLocaleString('en-IN')}</span>
+                        <span>-₹{(plan.price * discount).toFixed(2)}</span>
                       </div>
                     )}
                   </>
@@ -417,12 +415,12 @@ export default function CheckoutForm() {
                  {!isFreeCoupon && !isPay1Coupon && (
                     <div className="flex justify-between">
                         <span>GST (18%)</span>
-                        <span>+₹{gst.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                        <span>+₹{gst.toFixed(2)}</span>
                     </div>
                 )}
                 <div className="border-t pt-4 flex justify-between font-bold text-lg">
                 <span>Total</span>
-                <span>₹{total.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                <span>₹{total.toFixed(2)}</span>
                 </div>
             </CardContent>
             </Card>

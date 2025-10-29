@@ -77,13 +77,13 @@ export function generateInvoice(data: InvoiceData) {
   const tableColumn = ["Description", "Price", "Discount", "Subtotal"];
   const tableRows = [];
 
-  const subtotal = data.plan.price - (data.coupon.code === '25072005' ? data.plan.price : data.coupon.discount);
+  const subtotalBeforeGst = data.coupon.isPay1 ? (1 / 1.18) : (data.plan.price - data.coupon.discount);
 
   const row = [
     data.plan.name,
     `₹${data.plan.price.toFixed(2)}`,
     data.coupon.code === '25072005' ? `100% OFF` : (data.coupon.isPay1 ? `PAY1 Coupon` : `₹${data.coupon.discount.toFixed(2)}`),
-    `₹${subtotal.toFixed(2)}`
+    `₹${subtotalBeforeGst.toFixed(2)}`
   ];
   tableRows.push(row);
 
@@ -112,7 +112,7 @@ export function generateInvoice(data: InvoiceData) {
   doc.setFont('helvetica', 'bold');
   doc.text('Subtotal:', 130, yPos);
   doc.setFont('helvetica', 'normal');
-  doc.text(`₹${subtotal.toFixed(2)}`, 190, yPos, { align: 'right' });
+  doc.text(`₹${subtotalBeforeGst.toFixed(2)}`, 190, yPos, { align: 'right' });
   yPos += 7;
 
   if (data.gst > 0) {
