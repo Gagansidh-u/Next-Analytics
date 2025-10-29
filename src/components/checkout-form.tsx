@@ -79,11 +79,11 @@ export default function CheckoutForm() {
       let finalTotal = subtotal + gstAmount;
 
       if (isPay1Coupon) {
-        gstAmount = 0;
         finalTotal = 1;
+        gstAmount = 0; // No GST on a ₹1 token payment
       } else if (isFreeCoupon) {
-        gstAmount = 0;
         finalTotal = 0;
+        gstAmount = 0;
       }
       
       setGst(gstAmount);
@@ -142,22 +142,22 @@ export default function CheckoutForm() {
     try {
         const response = await fetch('/api/create-order', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ amount: Math.round(amount * 100) }), // Amount in paise
         });
+
         if (!response.ok) {
-            throw new Error('Failed to create order');
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Failed to create order');
         }
-        const order = await response.json();
-        return order;
+
+        return await response.json();
     } catch (error) {
         console.error('Order creation error:', error);
         toast({
             variant: 'destructive',
             title: 'Payment Error',
-            description: 'Could not initiate payment. Please try again.',
+            description: error instanceof Error ? error.message : 'Could not initiate payment. Please try again.',
         });
         return null;
     }
@@ -170,7 +170,6 @@ export default function CheckoutForm() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
-
       return await response.json();
     } catch (error) {
       console.error('Payment verification error:', error);
@@ -182,6 +181,7 @@ export default function CheckoutForm() {
     if (invoiceData) {
       generateInvoice(invoiceData);
     }
+    // Redirect to the external form link
     window.location.href = 'https://forms.gle/a8Yhowx9EutCwbcw7';
   };
 
@@ -198,7 +198,7 @@ export default function CheckoutForm() {
       setIsLoading(false);
       return;
     }
-
+    
     try {
       await addCustomer(firestore, { name: formData.name, email: formData.email });
 
@@ -233,31 +233,26 @@ export default function CheckoutForm() {
       setInvoiceData(newInvoiceData);
       setShowSuccessDialog(true);
     } catch (error) {
-      console.error('Error saving customer details:', error);
+      console.error('Error in post-payment processing:', error);
       toast({
         variant: 'destructive',
         title: 'Post-Payment Error',
-        description:
-          'Your payment was successful, but we failed to save your details. Please contact support.',
+        description: 'Your payment was successful, but we failed to save your details. Please contact support.',
       });
     } finally {
-        setIsLoading(false);
+      setIsLoading(false);
     }
   };
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsLoading(true);
+
     if (!firestore || !plan) {
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'Database not available. Please try again later.',
-      });
+      toast({ variant: 'destructive', title: 'Error', description: 'Component not ready. Please refresh.' });
       setIsLoading(false);
       return;
     }
 
-    // Handle free purchase
     if (isFreeCoupon) {
       const mockPaymentDetails = {
         orderId: `FREE-${Date.now()}`,
@@ -268,41 +263,32 @@ export default function CheckoutForm() {
     }
 
     if (!RAZORPAY_KEY) {
-       toast({
-        variant: 'destructive',
-        title: 'Configuration Error',
-        description: 'Razorpay Key ID is not configured. Please contact support.',
-      });
+      toast({ variant: 'destructive', title: 'Configuration Error', description: 'Payment gateway not configured.' });
       setIsLoading(false);
       return;
     }
 
     if (!isRazorpayLoaded) {
-      toast({
-        variant: 'destructive',
-        title: 'Payment Error',
-        description: 'Payment gateway is not loaded yet. Please wait a moment and try again.',
-      });
+      toast({ variant: 'destructive', title: 'Payment Error', description: 'Payment gateway not loaded. Try again.' });
       setIsLoading(false);
       return;
     }
-
+    
     const order = await createOrder(total);
-
-    if(!order) {
+    if (!order) {
         setIsLoading(false);
         return;
     }
 
     const options = {
       key: RAZORPAY_KEY,
-      amount: total * 100, // Amount in paise
-      currency: 'INR',
+      amount: order.amount,
+      currency: order.currency,
       name: 'Next Analytics',
       description: `Payment for ${plan.name}`,
       image: 'https://github.com/Gagansidh-u/My-Webapp/blob/master/Picsart_25-10-18_16-37-29-081.png?raw=true',
       order_id: order.id,
-      handler: async function (response: any) {
+      handler: async (response: any) => {
         const verificationData = {
           razorpay_payment_id: response.razorpay_payment_id,
           razorpay_order_id: response.razorpay_order_id,
@@ -331,7 +317,7 @@ export default function CheckoutForm() {
       },
       notes: {
         plan: planId,
-        coupon_applied: couponCode,
+        coupon_applied: couponCode.toUpperCase(),
       },
       theme: {
         color: '#008080',
@@ -339,7 +325,7 @@ export default function CheckoutForm() {
     };
     
     const rzp = new window.Razorpay(options);
-    rzp.on('payment.failed', function (response: any) {
+    rzp.on('payment.failed', (response: any) => {
         toast({
             variant: 'destructive',
             title: 'Payment Failed',
@@ -347,6 +333,7 @@ export default function CheckoutForm() {
         });
         setIsLoading(false);
     });
+
     rzp.open();
   };
 
@@ -373,14 +360,14 @@ export default function CheckoutForm() {
       />
 
     <Dialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md" onInteractOutside={(e) => e.preventDefault()}>
             <DialogHeader>
                 <div className="flex justify-center">
                     <CheckCircle className="h-16 w-16 text-green-500 mb-4" />
                 </div>
                 <DialogTitle className="text-center text-2xl">Order Successful!</DialogTitle>
                 <DialogDescription className="text-center">
-                    Thank you for your order. You can now download your invoice and proceed.
+                    Thank you for your order. Download your invoice and proceed to the next step.
                 </DialogDescription>
             </DialogHeader>
             <DialogFooter className="justify-center">
@@ -427,7 +414,7 @@ export default function CheckoutForm() {
                     </FormItem>
                   )}
                 />
-                <Button type="submit" className="w-full" disabled={isLoading || !isRazorpayLoaded}>
+                <Button type="submit" className="w-full" disabled={isLoading || (!isRazorpayLoaded && !isFreeCoupon)}>
                   {getButtonText()}
                 </Button>
               </form>
