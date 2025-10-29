@@ -1,8 +1,18 @@
-
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import { Newspaper } from 'lucide-react';
 import Image from 'next/image';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Next Analytics Blog',
+  description: 'Explore insights on data analytics, business intelligence, and how Indian startups can leverage data for growth. The official blog of Next Analytics.',
+  keywords: ['data analytics blog', 'business intelligence India', 'startup growth', 'Punjab tech'],
+  openGraph: {
+    title: 'The Next Wave: Data-Driven Decisions in India | Next Analytics Blog',
+    description: 'An in-depth look at Next Analytics and the future of business intelligence in India.',
+  },
+};
 
 export default function BlogPage() {
   return (

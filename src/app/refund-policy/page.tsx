@@ -1,6 +1,16 @@
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import { CircleDollarSign } from 'lucide-react';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Refund Policy',
+  description: 'Review the refund policy for Next Analytics. Due to the nature of our services, all sales are final and we do not offer refunds.',
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
 
 export default function RefundPolicyPage() {
   return (

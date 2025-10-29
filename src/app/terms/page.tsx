@@ -1,6 +1,16 @@
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import { FileText } from 'lucide-react';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Terms and Conditions',
+  description: 'Read the Terms and Conditions for using Next Analytics services. This governs your use of our website and data analysis services.',
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
 
 export default function TermsPage() {
   return (

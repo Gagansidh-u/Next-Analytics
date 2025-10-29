@@ -1,10 +1,24 @@
-// @/app/checkout/page.tsx
+
 'use client';
 
 import { Suspense } from 'react';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import CheckoutForm from '@/components/checkout-form';
+import type { Metadata } from 'next';
+
+// Although metadata can't be used in a client component, 
+// placing it here for organization. Next.js will ignore it in this file.
+// For full SEO, this page would ideally be a Server Component.
+export const metadata: Metadata = {
+  title: 'Checkout',
+  description: 'Complete your order and start your journey with Next Analytics. Secure payment for our data analytics plans.',
+  robots: {
+    index: false, // No need to index the checkout page
+    follow: false,
+  },
+};
+
 
 function CheckoutPageContent() {
   return (

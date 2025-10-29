@@ -1,9 +1,19 @@
-
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import { MailQuestion, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Lost Data Upload Form',
+  description: 'Lost your data submission link after payment? Follow these simple steps to recover it by contacting our helpdesk.',
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
+
 
 export default function LostFormPage() {
   return (

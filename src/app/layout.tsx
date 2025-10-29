@@ -11,7 +11,10 @@ const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_ID;
 
 
 export const metadata: Metadata = {
-  title: 'Next Analytics | Data Analytics in Barnala, Punjab, and India',
+  title: {
+    default: 'Next Analytics | Data Analytics in Barnala, Punjab, and India',
+    template: '%s | Next Analytics',
+  },
   description: 'Next Analytics: Top data analytics and business intelligence services based in Barnala, Punjab. We help startups and SMBs across India turn raw data into actionable insights and revenue. Your top choice for Next Analytics in Punjab.',
   applicationName: 'Next Analytics',
   keywords: ['Next Analytics', 'Next Analytics Barnala', 'Next Analytics Punjab', 'Next Analytics India', 'data analytics Barnala', 'business intelligence Punjab', 'startup analytics India', 'smb data Punjab', 'dashboard reporting', 'data insights'],
@@ -77,7 +80,7 @@ export default function RootLayout({
     url: siteUrl,
     logo: `${siteUrl}/android-chrome-512x512.png`,
     image: `${siteUrl}/og-image.png`,
-    description: metadata.description,
+    description: metadata.description as string,
     address: {
       '@type': 'PostalAddress',
       streetAddress: 'Barnala',

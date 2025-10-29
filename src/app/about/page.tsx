@@ -1,6 +1,18 @@
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import { Building } from 'lucide-react';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'About Next Analytics',
+  description: 'Learn about the mission and story of Next Analytics. We are dedicated to democratizing data analytics for businesses in Barnala, Punjab, and all of India.',
+  keywords: ['About Next Analytics', 'data analytics company', 'business intelligence mission', 'Barnala startups'],
+  openGraph: {
+    title: 'About Next Analytics',
+    description: 'Discover our mission to empower businesses with data-driven insights.',
+  },
+};
+
 
 export default function AboutPage() {
   return (

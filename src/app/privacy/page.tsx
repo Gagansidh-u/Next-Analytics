@@ -1,6 +1,16 @@
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import { ShieldCheck } from 'lucide-react';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Privacy Policy',
+  description: 'Read the Privacy Policy for Next Analytics. We are committed to protecting your data and privacy. Learn how we collect, use, and secure your information.',
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
 
 export default function PrivacyPage() {
   return (

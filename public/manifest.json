@@ -1,11 +1,11 @@
 {
   "name": "Next Analytics",
-  "short_name": "Next Analytics",
-  "description": "Data Analytics for Startups and SMBs in Barnala, Punjab, and India.",
+  "short_name": "NextAnalytics",
+  "description": "Affordable data analytics in Barnala by Next Analytics to help startups & SMBs in Punjab and India make data-driven decisions.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0a101e",
-  "theme_color": "#22c55e",
+  "background_color": "#0a192f",
+  "theme_color": "#1F9E8A",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",

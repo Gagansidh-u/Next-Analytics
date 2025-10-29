@@ -4,6 +4,17 @@ import { Mail, Phone, MessageSquare, MapPin } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Contact Next Analytics',
+  description: 'Get in touch with the Next Analytics team. We are based in Barnala, Punjab, and ready to help you with your data analytics needs. Contact us via email, phone, or WhatsApp.',
+  keywords: ['contact Next Analytics', 'Next Analytics address', 'data analytics support', 'Barnala business'],
+  openGraph: {
+    title: 'Contact Next Analytics',
+    description: 'We are here to answer your questions about our data analytics services.',
+  },
+};
 
 const contactMethods = [
   {
