@@ -1,3 +1,4 @@
+// @/components/checkout-form.tsx
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
@@ -9,11 +10,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Ticket, CreditCard } from 'lucide-react';
+import { Loader2, Ticket, CreditCard, Download, CheckCircle } from 'lucide-react';
 import Script from 'next/script';
 import { addCustomer } from '@/firebase/firestore';
 import { useFirestore } from '@/firebase';
+import { generateInvoice, InvoiceData } from '@/lib/invoice';
 
 
 const plans = {
@@ -54,6 +57,9 @@ export default function CheckoutForm() {
   const [couponCode, setCouponCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isRazorpayLoaded, setIsRazorpayLoaded] = useState(false);
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [invoiceData, setInvoiceData] = useState<InvoiceData | null>(null);
+
 
   useEffect(() => {
     const selectedPlanId = searchParams.get('plan') as keyof typeof plans;
@@ -152,6 +158,13 @@ export default function CheckoutForm() {
     }
   };
 
+  const handleDownloadAndContinue = () => {
+    if (invoiceData) {
+      generateInvoice(invoiceData);
+    }
+    window.location.href = 'https://forms.gle/a8Yhowx9EutCwbcw7';
+  };
+
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsLoading(true);
     if (!firestore) {
@@ -210,11 +223,30 @@ export default function CheckoutForm() {
         if (result.success) {
           try {
             await addCustomer(firestore, { name: data.name, email: data.email });
-            toast({
-                title: 'Payment Successful!',
-                description: 'Thank you for your purchase. You will be redirected shortly.',
-            });
-            window.location.href = 'https://forms.gle/a8Yhowx9EutCwbcw7';
+
+            const newInvoiceData: InvoiceData = {
+                orderId: response.razorpay_order_id,
+                paymentId: response.razorpay_payment_id,
+                customer: {
+                    name: data.name,
+                    email: data.email,
+                },
+                plan: {
+                    name: plan!.name,
+                    price: plan!.price,
+                },
+                coupon: {
+                    code: couponCode.toUpperCase(),
+                    discount: isPay1Coupon ? (plan!.price + gst - 1) : (plan!.price * discount),
+                    isPay1: isPay1Coupon,
+                },
+                gst,
+                total,
+            };
+            setInvoiceData(newInvoiceData);
+            setShowSuccessDialog(true);
+            setIsLoading(false);
+            
           } catch (error) {
             console.error("Error saving customer details:", error);
             toast({
@@ -222,6 +254,7 @@ export default function CheckoutForm() {
                 title: 'Post-Payment Error',
                 description: 'Your payment was successful, but we failed to save your details. Please contact support.',
             });
+            setIsLoading(false);
           }
         } else {
           toast({
@@ -268,6 +301,27 @@ export default function CheckoutForm() {
         src="https://checkout.razorpay.com/v1/checkout.js"
         onLoad={() => setIsRazorpayLoaded(true)}
       />
+
+    <Dialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
+        <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+                <div className="flex justify-center">
+                    <CheckCircle className="h-16 w-16 text-green-500 mb-4" />
+                </div>
+                <DialogTitle className="text-center text-2xl">Payment Successful!</DialogTitle>
+                <DialogDescription className="text-center">
+                    Thank you for your purchase. You can now download your invoice and proceed.
+                </DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="justify-center">
+                <Button onClick={handleDownloadAndContinue} className="w-full">
+                    <Download className="mr-2 h-4 w-4" />
+                    Download Invoice & Continue
+                </Button>
+            </DialogFooter>
+        </DialogContent>
+    </Dialog>
+
       <div className="grid gap-10 md:grid-cols-2">
         <Card>
           <CardHeader>
