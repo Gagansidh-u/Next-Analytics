@@ -10,9 +10,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Ticket, CreditCard, Download, CheckCircle } from 'lucide-react';
+import { Loader2, Ticket, CreditCard } from 'lucide-react';
 import Script from 'next/script';
 import { addCustomer } from '@/firebase/firestore';
 import { useFirestore } from '@/firebase';
@@ -58,8 +57,6 @@ export default function CheckoutForm() {
   const [couponCode, setCouponCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isRazorpayLoaded, setIsRazorpayLoaded] = useState(false);
-  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
-  const [invoiceData, setInvoiceData] = useState<InvoiceData | null>(null);
 
 
   useEffect(() => {
@@ -182,14 +179,6 @@ export default function CheckoutForm() {
     }
   };
 
-  const handleDownloadAndContinue = () => {
-    if (invoiceData) {
-      generateInvoice(invoiceData);
-    }
-    // Redirect to the external form link
-    window.location.href = 'https://forms.gle/a8Yhowx9EutCwbcw7';
-  };
-
   const handleSuccessfulOrder = useCallback(async (
     formData: FormValues,
     paymentDetails: { orderId: string; paymentId: string }
@@ -235,8 +224,10 @@ export default function CheckoutForm() {
         gst,
         total,
       };
-      setInvoiceData(newInvoiceData);
-      setShowSuccessDialog(true);
+      
+      generateInvoice(newInvoiceData);
+      window.location.href = 'https://forms.gle/a8Yhowx9EutCwbcw7';
+
     } catch (error) {
       console.error('Error in post-payment processing:', error);
       toast({
@@ -352,26 +343,6 @@ export default function CheckoutForm() {
         src="https://checkout.razorpay.com/v1/checkout.js"
         onLoad={() => setIsRazorpayLoaded(true)}
       />
-
-    <Dialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
-        <DialogContent className="sm:max-w-md" onInteractOutside={(e) => e.preventDefault()}>
-            <DialogHeader>
-                <div className="flex justify-center">
-                    <CheckCircle className="h-16 w-16 text-green-500 mb-4" />
-                </div>
-                <DialogTitle className="text-center text-2xl">Order Successful!</DialogTitle>
-                <DialogDescription className="text-center">
-                    Thank you for your order. Download your invoice and proceed to the next step to submit your data.
-                </DialogDescription>
-            </DialogHeader>
-            <DialogFooter className="justify-center">
-                <Button onClick={handleDownloadAndContinue} className="w-full">
-                    <Download className="mr-2 h-4 w-4" />
-                    Download Invoice & Continue
-                </Button>
-            </DialogFooter>
-        </DialogContent>
-    </Dialog>
 
       <div className="grid gap-10 md:grid-cols-2">
         <Card>
