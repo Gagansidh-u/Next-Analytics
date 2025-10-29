@@ -27,7 +27,9 @@ export function generateInvoice(data: InvoiceData) {
   const doc = new jsPDF();
   const date = new Date();
   const formattedDate = format(date, 'MMM dd, yyyy');
-  const invoiceNumber = data.paymentId.slice(-8).toUpperCase();
+  const invoiceNumber = data.paymentId.startsWith('FREE-') 
+    ? data.paymentId.slice(5, 13).toUpperCase() 
+    : data.paymentId.slice(-8).toUpperCase();
 
   // Header
   doc.setFontSize(22);
@@ -57,12 +59,17 @@ export function generateInvoice(data: InvoiceData) {
   doc.setFont('helvetica', 'bold');
   doc.text('Invoice Number:', 130, 50);
   doc.text('Invoice Date:', 130, 56);
-  doc.text('Payment ID:', 130, 62);
+  if (!data.paymentId.startsWith('FREE-')) {
+    doc.text('Payment ID:', 130, 62);
+  }
 
   doc.setFont('helvetica', 'normal');
   doc.text(invoiceNumber, 190, 50, { align: 'right' });
   doc.text(formattedDate, 190, 56, { align: 'right' });
-  doc.text(data.paymentId, 190, 62, { align: 'right' });
+  if (!data.paymentId.startsWith('FREE-')) {
+    doc.text(data.paymentId, 190, 62, { align: 'right' });
+  }
+
 
   // Table
   const tableColumn = ["Description", "Price", "Discount", "Subtotal"];
@@ -73,7 +80,7 @@ export function generateInvoice(data: InvoiceData) {
   const row = [
     data.plan.name,
     `₹${data.plan.price.toFixed(2)}`,
-    data.coupon.isPay1 ? `PAY1 Coupon` : `₹${data.coupon.discount.toFixed(2)}`,
+    data.coupon.code === '25072005' ? `100% OFF` : (data.coupon.isPay1 ? `PAY1 Coupon` : `₹${data.coupon.discount.toFixed(2)}`),
     `₹${subtotal.toFixed(2)}`
   ];
   tableRows.push(row);
@@ -106,12 +113,14 @@ export function generateInvoice(data: InvoiceData) {
   doc.text(`₹${subtotal.toFixed(2)}`, 190, yPos, { align: 'right' });
   yPos += 7;
 
-  doc.setFont('helvetica', 'bold');
-  doc.text('GST (18%):', 130, yPos);
-  doc.setFont('helvetica', 'normal');
-  doc.text(`₹${data.gst.toFixed(2)}`, 190, yPos, { align: 'right' });
-  yPos += 7;
-
+  if (data.gst > 0) {
+    doc.setFont('helvetica', 'bold');
+    doc.text('GST (18%):', 130, yPos);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`₹${data.gst.toFixed(2)}`, 190, yPos, { align: 'right' });
+    yPos += 7;
+  }
+  
   doc.setFontSize(12);
   doc.setFont('helvetica', 'bold');
   doc.text('Total:', 130, yPos);

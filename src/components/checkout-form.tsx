@@ -52,6 +52,7 @@ export default function CheckoutForm() {
   const [plan, setPlan] = useState<{ name: string; price: number } | null>(null);
   const [discount, setDiscount] = useState(0);
   const [isPay1Coupon, setIsPay1Coupon] = useState(false);
+  const [isFreeCoupon, setIsFreeCoupon] = useState(false);
   const [gst, setGst] = useState(0);
   const [total, setTotal] = useState(0);
   const [couponCode, setCouponCode] = useState('');
@@ -76,6 +77,9 @@ export default function CheckoutForm() {
       if (isPay1Coupon) {
         setGst(0);
         setTotal(1);
+      } else if (isFreeCoupon) {
+        setGst(0);
+        setTotal(0);
       } else {
         const subtotalAfterDiscount = plan.price * (1 - discount);
         const gstAmount = subtotalAfterDiscount * GST_RATE;
@@ -83,7 +87,7 @@ export default function CheckoutForm() {
         setTotal(subtotalAfterDiscount + gstAmount);
       }
     }
-  }, [plan, discount, isPay1Coupon]);
+  }, [plan, discount, isPay1Coupon, isFreeCoupon]);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -96,6 +100,7 @@ export default function CheckoutForm() {
     if (upperCaseCoupon === 'OFFNEXT15') {
       setDiscount(0.15);
       setIsPay1Coupon(false);
+      setIsFreeCoupon(false);
       toast({
         title: 'Coupon Applied!',
         description: 'You received a 15% discount.',
@@ -103,13 +108,23 @@ export default function CheckoutForm() {
     } else if (upperCaseCoupon === 'PAY1') {
       setDiscount(0);
       setIsPay1Coupon(true);
+      setIsFreeCoupon(false);
       toast({
         title: 'Coupon Applied!',
         description: 'You can now purchase this plan for just ₹1.',
       });
+    } else if (upperCaseCoupon === '25072005') {
+      setDiscount(1);
+      setIsPay1Coupon(false);
+      setIsFreeCoupon(true);
+      toast({
+        title: 'Coupon Applied!',
+        description: 'You get 100% off. This purchase is free!',
+      });
     } else {
       setDiscount(0);
       setIsPay1Coupon(false);
+      setIsFreeCoupon(false);
       toast({
         variant: 'destructive',
         title: 'Invalid Coupon',
@@ -165,15 +180,76 @@ export default function CheckoutForm() {
     window.location.href = 'https://forms.gle/a8Yhowx9EutCwbcw7';
   };
 
+  const handleSuccessfulOrder = async (
+    formData: FormValues,
+    paymentDetails: { orderId: string; paymentId: string }
+  ) => {
+    if (!firestore || !plan) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'A database error occurred. Please contact support.',
+      });
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      await addCustomer(firestore, { name: formData.name, email: formData.email });
+
+      const newInvoiceData: InvoiceData = {
+        orderId: paymentDetails.orderId,
+        paymentId: paymentDetails.paymentId,
+        customer: {
+          name: formData.name,
+          email: formData.email,
+        },
+        plan: {
+          name: plan.name,
+          price: plan.price,
+        },
+        coupon: {
+          code: couponCode.toUpperCase(),
+          discount: isFreeCoupon ? plan.price : (isPay1Coupon ? plan.price + gst - 1 : plan.price * discount),
+          isPay1: isPay1Coupon,
+        },
+        gst,
+        total,
+      };
+      setInvoiceData(newInvoiceData);
+      setShowSuccessDialog(true);
+      setIsLoading(false);
+    } catch (error) {
+      console.error('Error saving customer details:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Post-Payment Error',
+        description:
+          'Your payment was successful, but we failed to save your details. Please contact support.',
+      });
+      setIsLoading(false);
+    }
+  };
+
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsLoading(true);
-    if (!firestore) {
+    if (!firestore || !plan) {
       toast({
         variant: 'destructive',
         title: 'Error',
         description: 'Database not available. Please try again later.',
       });
       setIsLoading(false);
+      return;
+    }
+
+    // Handle free purchase
+    if (total === 0 && isFreeCoupon) {
+      const mockPaymentDetails = {
+        orderId: `FREE-${Date.now()}`,
+        paymentId: `FREE-${Date.now()}`,
+      };
+      await handleSuccessfulOrder(data, mockPaymentDetails);
       return;
     }
 
@@ -221,41 +297,10 @@ export default function CheckoutForm() {
         const result = await verifyPayment(verificationData);
 
         if (result.success) {
-          try {
-            await addCustomer(firestore, { name: data.name, email: data.email });
-
-            const newInvoiceData: InvoiceData = {
-                orderId: response.razorpay_order_id,
-                paymentId: response.razorpay_payment_id,
-                customer: {
-                    name: data.name,
-                    email: data.email,
-                },
-                plan: {
-                    name: plan!.name,
-                    price: plan!.price,
-                },
-                coupon: {
-                    code: couponCode.toUpperCase(),
-                    discount: isPay1Coupon ? (plan!.price + gst - 1) : (plan!.price * discount),
-                    isPay1: isPay1Coupon,
-                },
-                gst,
-                total,
-            };
-            setInvoiceData(newInvoiceData);
-            setShowSuccessDialog(true);
-            setIsLoading(false);
-            
-          } catch (error) {
-            console.error("Error saving customer details:", error);
-            toast({
-                variant: 'destructive',
-                title: 'Post-Payment Error',
-                description: 'Your payment was successful, but we failed to save your details. Please contact support.',
-            });
-            setIsLoading(false);
-          }
+          await handleSuccessfulOrder(data, {
+            orderId: response.razorpay_order_id,
+            paymentId: response.razorpay_payment_id,
+          });
         } else {
           toast({
             variant: 'destructive',
@@ -294,6 +339,16 @@ export default function CheckoutForm() {
     return <div className="text-center"><Loader2 className="mx-auto h-12 w-12 animate-spin" /></div>;
   }
 
+  const getButtonText = () => {
+    if (isLoading) {
+      return <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Processing...</>;
+    }
+    if (total === 0 && isFreeCoupon) {
+      return 'Get for Free';
+    }
+    return <><CreditCard className="mr-2 h-4 w-4" /> Pay ₹{total.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</>;
+  };
+
   return (
     <>
       <Script
@@ -308,9 +363,9 @@ export default function CheckoutForm() {
                 <div className="flex justify-center">
                     <CheckCircle className="h-16 w-16 text-green-500 mb-4" />
                 </div>
-                <DialogTitle className="text-center text-2xl">Payment Successful!</DialogTitle>
+                <DialogTitle className="text-center text-2xl">Order Successful!</DialogTitle>
                 <DialogDescription className="text-center">
-                    Thank you for your purchase. You can now download your invoice and proceed.
+                    Thank you for your order. You can now download your invoice and proceed.
                 </DialogDescription>
             </DialogHeader>
             <DialogFooter className="justify-center">
@@ -358,11 +413,7 @@ export default function CheckoutForm() {
                   )}
                 />
                 <Button type="submit" className="w-full" disabled={isLoading || !isRazorpayLoaded}>
-                  {isLoading ? (
-                    <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Processing...</>
-                  ) : (
-                    <><CreditCard className="mr-2 h-4 w-4" /> Pay ₹{total.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</>
-                  )}
+                  {getButtonText()}
                 </Button>
               </form>
             </Form>
@@ -380,7 +431,12 @@ export default function CheckoutForm() {
                 <span>₹{plan.price.toLocaleString('en-IN')}</span>
                 </div>
                 
-                {isPay1Coupon ? (
+                {isFreeCoupon ? (
+                  <div className="flex justify-between text-green-500">
+                    <span>100% Discount</span>
+                    <span>-₹{plan.price.toLocaleString('en-IN')}</span>
+                  </div>
+                ) : isPay1Coupon ? (
                   <div className="flex justify-between text-green-500">
                       <span>PAY1 Coupon</span>
                       <span>-₹{(plan.price + (plan.price * GST_RATE) - 1).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
