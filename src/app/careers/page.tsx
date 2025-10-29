@@ -1,5 +1,3 @@
-'use client';
-
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Briefcase, ArrowLeft } from 'lucide-react';
@@ -7,9 +5,6 @@ import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import type { Metadata } from 'next';
 
-// Although metadata can't be used in a client component, 
-// placing it here for organization. Next.js will ignore it in this file.
-// For full SEO, this page would ideally be a Server Component.
 export const metadata: Metadata = {
   title: 'Careers at Next Analytics',
   description: 'Join our team! We are looking for passionate individuals to help us democratize data analytics. See open positions at Next Analytics.',
