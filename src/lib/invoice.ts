@@ -26,7 +26,10 @@ export interface InvoiceData {
 // Function to fetch and convert image to Base64
 async function getImageBase64(url: string): Promise<string | null> {
   try {
-    const response = await fetch(url);
+    // This needs to be a full URL for the fetch to work on the server-side.
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    const response = await fetch(new URL(url, baseUrl).toString());
+    
     if (!response.ok) {
       console.error(`Failed to fetch image: ${response.statusText}`);
       return null;
@@ -108,9 +111,9 @@ export async function generateInvoice(data: InvoiceData) {
 
   const row = [
     data.plan.name,
-    data.plan.price.toFixed(2),
-    data.coupon.code === '25072005' ? `100% OFF` : (data.coupon.isPay1 ? `PAY1 Coupon` : data.coupon.discount.toFixed(2)),
-    subtotalBeforeGst.toFixed(2)
+    data.plan.price,
+    data.coupon.code === '25072005' ? `100% OFF` : (data.coupon.isPay1 ? `PAY1 Coupon` : data.coupon.discount),
+    subtotalBeforeGst
   ];
   tableRows.push(row);
 
