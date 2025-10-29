@@ -74,18 +74,23 @@ export default function CheckoutForm() {
 
   useEffect(() => {
     if (plan) {
-      let subtotal = plan.price * (1 - discount);
-      let gstAmount = subtotal * GST_RATE;
-      let finalTotal = subtotal + gstAmount;
-
-      if (isPay1Coupon) {
-        finalTotal = 1;
-        gstAmount = 0; // No GST on a ₹1 token payment
-      } else if (isFreeCoupon) {
-        finalTotal = 0;
-        gstAmount = 0;
+      let subtotal = plan.price;
+      
+      if(isFreeCoupon) {
+        subtotal = 0;
+      } else if (isPay1Coupon) {
+        subtotal = 1 / (1 + GST_RATE);
+      } else {
+        subtotal = plan.price * (1 - discount);
       }
       
+      let gstAmount = isFreeCoupon ? 0 : subtotal * GST_RATE;
+      let finalTotal = isPay1Coupon ? 1 : subtotal + gstAmount;
+
+      if(isFreeCoupon){
+        finalTotal = 0;
+      }
+
       setGst(gstAmount);
       setTotal(finalTotal);
     }
@@ -185,7 +190,7 @@ export default function CheckoutForm() {
     window.location.href = 'https://forms.gle/a8Yhowx9EutCwbcw7';
   };
 
-  const handleSuccessfulOrder = async (
+  const handleSuccessfulOrder = useCallback(async (
     formData: FormValues,
     paymentDetails: { orderId: string; paymentId: string }
   ) => {
@@ -242,16 +247,11 @@ export default function CheckoutForm() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [firestore, plan, isFreeCoupon, isPay1Coupon, discount, couponCode, gst, total, toast]);
+
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsLoading(true);
-
-    if (!firestore || !plan) {
-      toast({ variant: 'destructive', title: 'Error', description: 'Component not ready. Please refresh.' });
-      setIsLoading(false);
-      return;
-    }
 
     if (isFreeCoupon) {
       const mockPaymentDetails = {
@@ -262,18 +262,12 @@ export default function CheckoutForm() {
       return;
     }
 
-    if (!RAZORPAY_KEY) {
-      toast({ variant: 'destructive', title: 'Configuration Error', description: 'Payment gateway not configured.' });
-      setIsLoading(false);
-      return;
+    if (!firestore || !plan || !RAZORPAY_KEY || !isRazorpayLoaded) {
+        toast({ variant: 'destructive', title: 'Error', description: 'Payment gateway is not ready. Please try again in a moment.' });
+        setIsLoading(false);
+        return;
     }
 
-    if (!isRazorpayLoaded) {
-      toast({ variant: 'destructive', title: 'Payment Error', description: 'Payment gateway not loaded. Try again.' });
-      setIsLoading(false);
-      return;
-    }
-    
     const order = await createOrder(total);
     if (!order) {
         setIsLoading(false);
@@ -329,7 +323,7 @@ export default function CheckoutForm() {
         toast({
             variant: 'destructive',
             title: 'Payment Failed',
-            description: `Error: ${response.error.description}`,
+            description: `Error: ${response.error.code} - ${response.error.description}`,
         });
         setIsLoading(false);
     });
@@ -359,13 +353,7 @@ export default function CheckoutForm() {
         onLoad={() => setIsRazorpayLoaded(true)}
       />
 
-    <Dialog open={showSuccessDialog} onOpenChange={(isOpen) => {
-      // Prevent closing the dialog by clicking outside
-      if (!isOpen && invoiceData) {
-        return;
-      }
-      setShowSuccessDialog(isOpen);
-    }}>
+    <Dialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
         <DialogContent className="sm:max-w-md" onInteractOutside={(e) => e.preventDefault()}>
             <DialogHeader>
                 <div className="flex justify-center">
@@ -441,13 +429,13 @@ export default function CheckoutForm() {
                 
                 {isFreeCoupon ? (
                   <div className="flex justify-between text-green-500">
-                    <span>100% Discount</span>
+                    <span>100% Discount ("25072005")</span>
                     <span>-₹{plan.price.toLocaleString('en-IN')}</span>
                   </div>
                 ) : isPay1Coupon ? (
                   <div className="flex justify-between text-green-500">
                       <span>PAY1 Coupon</span>
-                      <span>-₹{(plan.price + (plan.price * GST_RATE) - 1).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                      <span>-₹{(plan.price * (1+GST_RATE) - 1).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                   </div>
                 ) : (
                   <>
@@ -457,13 +445,14 @@ export default function CheckoutForm() {
                         <span>-₹{(plan.price * discount).toLocaleString('en-IN')}</span>
                       </div>
                     )}
+                  </>
+                )}
+                 {!isFreeCoupon && !isPay1Coupon && (
                     <div className="flex justify-between">
                         <span>GST (18%)</span>
                         <span>+₹{gst.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                     </div>
-                  </>
                 )}
-
                 <div className="border-t pt-4 flex justify-between font-bold text-lg">
                 <span>Total</span>
                 <span>₹{total.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
