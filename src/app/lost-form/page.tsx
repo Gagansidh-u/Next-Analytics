@@ -42,7 +42,7 @@ export default function LostFormPage() {
                     <li>
                         <strong>Address and Subject:</strong>
                         <ul>
-                            <li><strong>To:</strong> <a href="mailto:helpdesk.grock@outlook.com">helpdesk.grock@outlook.com</a></li>
+                            <li><strong>To:</strong> <a href="mailto:Nextanalytics@outlook.com">Nextanalytics@outlook.com</a></li>
                             <li><strong>Subject:</strong> Lost Data Upload Link - Invoice [Your Invoice Number]</li>
                         </ul>
                     </li>

@@ -21,9 +21,9 @@ const contactMethods = [
     icon: <Mail className="h-8 w-8 text-primary" />,
     title: 'Email Us',
     description: 'General inquiries and support.',
-    details: 'contact@nextanalytics.com',
+    details: 'Nextanalytics@outlook.com',
     cta: 'Send an Email',
-    href: 'mailto:contact@nextanalytics.com',
+    href: 'mailto:Nextanalytics@outlook.com',
   },
   {
     icon: <Phone className="h-8 w-8 text-primary" />,

@@ -39,7 +39,7 @@ export function generateInvoice(data: InvoiceData) {
   doc.setFontSize(10);
   doc.setFont('helvetica', 'normal');
   doc.text('Barnala, Punjab, India', 14, 28);
-  doc.text('contact@nextanalytics.com', 14, 32);
+  doc.text('Nextanalytics@outlook.com', 14, 32);
   doc.text('nextanalytics.store', 14, 36);
 
   doc.setFontSize(18);
