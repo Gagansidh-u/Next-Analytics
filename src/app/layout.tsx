@@ -78,7 +78,7 @@ export default function RootLayout({
     '@type': 'LocalBusiness',
     name: 'Next Analytics',
     url: siteUrl,
-    logo: `${siteUrl}/android-chrome-512x512.png`,
+    logo: 'https://github.com/Gagansidh-u/My-Webapp/blob/master/Picsart_25-10-18_16-37-29-081.png?raw=true',
     image: `${siteUrl}/og-image.png`,
     description: metadata.description as string,
     address: {
