@@ -12,7 +12,7 @@ export default function Hero() {
         <div className="mx-auto max-w-3xl text-center">
           <div className="mb-4 flex justify-center">
             <div className="relative rounded-full px-3 py-1 text-sm leading-6 text-foreground/80 ring-1 ring-border hover:ring-primary/50">
-              Trusted by 500+ startups.{' '}
+              Trusted by 500+ startups in India.{' '}
               <div className="ml-1 inline-flex items-center text-yellow-400">
                 <Star className="h-4 w-4 fill-current" />
                 <Star className="h-4 w-4 fill-current" />
@@ -26,7 +26,7 @@ export default function Hero() {
             Turn Your Raw Data into Tangible Revenue
           </h1>
           <p className="mt-6 text-lg text-foreground/70">
-            Next Analytics provides simple, fast, and affordable data analytics for startups and SMBs. We transform your scattered data into clear insights, interactive dashboards, and actionable reports.
+            Next Analytics, based in Barnala, Punjab, provides fast and affordable data analytics for startups and SMBs across India. We transform your scattered data into clear insights, interactive dashboards, and actionable reports.
           </p>
           <div className="mt-10 flex items-center justify-center gap-x-6">
             <Button size="lg" asChild>

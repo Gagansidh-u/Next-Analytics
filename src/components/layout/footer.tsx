@@ -15,7 +15,7 @@ export default function Footer() {
               <span className="text-xl font-bold">Next Analytics</span>
             </div>
             <p className="mt-4 text-sm text-muted-foreground">
-              Actionable insights for data-driven teams in Barnala, Punjab.
+              Actionable insights for data-driven teams in Barnala, Punjab, and across India.
             </p>
             <div className="mt-6 flex space-x-4">
               <Link href="/social" className="text-muted-foreground hover:text-foreground">
@@ -65,7 +65,7 @@ export default function Footer() {
           <p>&copy; {currentYear} Next Analytics, Inc. All rights reserved.</p>
            <div className="flex items-center justify-center gap-1 pt-2">
              <MapPin className="h-4 w-4"/>
-            <span>Barnala, Punjab, India</span>
+            <span>Barnala, Punjab, India - 148101</span>
            </div>
         </div>
       </div>
