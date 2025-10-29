@@ -236,27 +236,28 @@ export default function CheckoutForm() {
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsLoading(true);
-
+  
     if (isFreeCoupon) {
+      // Use await to ensure the function completes before moving on
       await handleSuccessfulOrder(data, {
         orderId: `FREE-${Date.now()}`,
         paymentId: `FREE-${Date.now()}`,
       });
       return;
     }
-
+  
     if (!plan || !RAZORPAY_KEY || !isRazorpayLoaded) {
-        toast({ variant: 'destructive', title: 'Error', description: 'Payment gateway is not ready. Please try again in a moment.' });
-        setIsLoading(false);
-        return;
+      toast({ variant: 'destructive', title: 'Error', description: 'Payment gateway is not ready. Please try again in a moment.' });
+      setIsLoading(false);
+      return;
     }
-
+  
     const order = await createOrder(total);
     if (!order) {
-        setIsLoading(false);
-        return;
+      setIsLoading(false);
+      return;
     }
-
+  
     const options = {
       key: RAZORPAY_KEY,
       amount: order.amount,
@@ -272,9 +273,9 @@ export default function CheckoutForm() {
           razorpay_order_id: response.razorpay_order_id,
           razorpay_signature: response.razorpay_signature,
         };
-
+  
         const result = await verifyPayment(verificationData);
-
+  
         if (result.success) {
           await handleSuccessfulOrder(data, {
             orderId: response.razorpay_order_id,
@@ -311,7 +312,7 @@ export default function CheckoutForm() {
         });
         setIsLoading(false);
     });
-
+  
     rzp.open();
     // Don't set isLoading to false here, as the handler will manage it.
   };
