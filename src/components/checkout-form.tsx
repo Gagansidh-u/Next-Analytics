@@ -74,18 +74,20 @@ export default function CheckoutForm() {
 
   useEffect(() => {
     if (plan) {
+      let subtotal = plan.price * (1 - discount);
+      let gstAmount = subtotal * GST_RATE;
+      let finalTotal = subtotal + gstAmount;
+
       if (isPay1Coupon) {
-        setGst(0);
-        setTotal(1);
+        gstAmount = 0;
+        finalTotal = 1;
       } else if (isFreeCoupon) {
-        setGst(0);
-        setTotal(0);
-      } else {
-        const subtotalAfterDiscount = plan.price * (1 - discount);
-        const gstAmount = subtotalAfterDiscount * GST_RATE;
-        setGst(gstAmount);
-        setTotal(subtotalAfterDiscount + gstAmount);
+        gstAmount = 0;
+        finalTotal = 0;
       }
+      
+      setGst(gstAmount);
+      setTotal(finalTotal);
     }
   }, [plan, discount, isPay1Coupon, isFreeCoupon]);
 
@@ -96,6 +98,7 @@ export default function CheckoutForm() {
 
   const applyCoupon = useCallback(() => {
     const upperCaseCoupon = couponCode.toUpperCase();
+    form.setValue('coupon', upperCaseCoupon);
 
     if (upperCaseCoupon === 'OFFNEXT15') {
       setDiscount(0.15);
@@ -114,7 +117,7 @@ export default function CheckoutForm() {
         description: 'You can now purchase this plan for just ₹1.',
       });
     } else if (upperCaseCoupon === '25072005') {
-      setDiscount(1);
+      setDiscount(0);
       setIsPay1Coupon(false);
       setIsFreeCoupon(true);
       toast({
@@ -125,13 +128,15 @@ export default function CheckoutForm() {
       setDiscount(0);
       setIsPay1Coupon(false);
       setIsFreeCoupon(false);
-      toast({
-        variant: 'destructive',
-        title: 'Invalid Coupon',
-        description: 'The coupon code you entered is not valid.',
-      });
+      if (couponCode) {
+        toast({
+          variant: 'destructive',
+          title: 'Invalid Coupon',
+          description: 'The coupon code you entered is not valid.',
+        });
+      }
     }
-  }, [couponCode, toast]);
+  }, [couponCode, toast, form]);
 
   const createOrder = async (amount: number) => {
     try {
@@ -197,6 +202,15 @@ export default function CheckoutForm() {
     try {
       await addCustomer(firestore, { name: formData.name, email: formData.email });
 
+      let discountAmount = 0;
+      if (isFreeCoupon) {
+          discountAmount = plan.price;
+      } else if (isPay1Coupon) {
+          discountAmount = plan.price + (plan.price * GST_RATE) - 1;
+      } else {
+          discountAmount = plan.price * discount;
+      }
+
       const newInvoiceData: InvoiceData = {
         orderId: paymentDetails.orderId,
         paymentId: paymentDetails.paymentId,
@@ -210,7 +224,7 @@ export default function CheckoutForm() {
         },
         coupon: {
           code: couponCode.toUpperCase(),
-          discount: isFreeCoupon ? plan.price : (isPay1Coupon ? plan.price + gst - 1 : plan.price * discount),
+          discount: discountAmount,
           isPay1: isPay1Coupon,
         },
         gst,
@@ -218,7 +232,6 @@ export default function CheckoutForm() {
       };
       setInvoiceData(newInvoiceData);
       setShowSuccessDialog(true);
-      setIsLoading(false);
     } catch (error) {
       console.error('Error saving customer details:', error);
       toast({
@@ -227,7 +240,8 @@ export default function CheckoutForm() {
         description:
           'Your payment was successful, but we failed to save your details. Please contact support.',
       });
-      setIsLoading(false);
+    } finally {
+        setIsLoading(false);
     }
   };
 
@@ -244,7 +258,7 @@ export default function CheckoutForm() {
     }
 
     // Handle free purchase
-    if (total === 0 && isFreeCoupon) {
+    if (isFreeCoupon) {
       const mockPaymentDetails = {
         orderId: `FREE-${Date.now()}`,
         paymentId: `FREE-${Date.now()}`,
@@ -262,11 +276,12 @@ export default function CheckoutForm() {
       setIsLoading(false);
       return;
     }
-    if ((!plan && !isPay1Coupon) || (total <= 0 && !isPay1Coupon) || !isRazorpayLoaded) {
+
+    if (!isRazorpayLoaded) {
       toast({
         variant: 'destructive',
         title: 'Payment Error',
-        description: 'Could not process payment. Please ensure Razorpay is loaded and the total is correct.',
+        description: 'Payment gateway is not loaded yet. Please wait a moment and try again.',
       });
       setIsLoading(false);
       return;
@@ -284,7 +299,7 @@ export default function CheckoutForm() {
       amount: total * 100, // Amount in paise
       currency: 'INR',
       name: 'Next Analytics',
-      description: `Payment for ${plan?.name}`,
+      description: `Payment for ${plan.name}`,
       image: 'https://github.com/Gagansidh-u/My-Webapp/blob/master/Picsart_25-10-18_16-37-29-081.png?raw=true',
       order_id: order.id,
       handler: async function (response: any) {
@@ -343,7 +358,7 @@ export default function CheckoutForm() {
     if (isLoading) {
       return <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Processing...</>;
     }
-    if (total === 0 && isFreeCoupon) {
+    if (isFreeCoupon) {
       return 'Get for Free';
     }
     return <><CreditCard className="mr-2 h-4 w-4" /> Pay ₹{total.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</>;

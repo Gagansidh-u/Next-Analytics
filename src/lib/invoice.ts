@@ -27,9 +27,9 @@ export function generateInvoice(data: InvoiceData) {
   const doc = new jsPDF();
   const date = new Date();
   const formattedDate = format(date, 'MMM dd, yyyy');
-  const invoiceNumber = data.paymentId.startsWith('FREE-') 
-    ? data.paymentId.slice(5, 13).toUpperCase() 
-    : data.paymentId.slice(-8).toUpperCase();
+  const invoiceNumber = data.orderId.startsWith('FREE-') 
+    ? data.orderId.slice(5, 13).toUpperCase() 
+    : data.orderId.slice(-8).toUpperCase();
 
   // Header
   doc.setFontSize(22);
@@ -59,15 +59,17 @@ export function generateInvoice(data: InvoiceData) {
   doc.setFont('helvetica', 'bold');
   doc.text('Invoice Number:', 130, 50);
   doc.text('Invoice Date:', 130, 56);
+  doc.text('Order ID:', 130, 62);
   if (!data.paymentId.startsWith('FREE-')) {
-    doc.text('Payment ID:', 130, 62);
+    doc.text('Payment ID:', 130, 68);
   }
 
   doc.setFont('helvetica', 'normal');
   doc.text(invoiceNumber, 190, 50, { align: 'right' });
   doc.text(formattedDate, 190, 56, { align: 'right' });
+  doc.text(data.orderId, 190, 62, { align: 'right' });
   if (!data.paymentId.startsWith('FREE-')) {
-    doc.text(data.paymentId, 190, 62, { align: 'right' });
+    doc.text(data.paymentId, 190, 68, { align: 'right' });
   }
 
 
@@ -75,7 +77,7 @@ export function generateInvoice(data: InvoiceData) {
   const tableColumn = ["Description", "Price", "Discount", "Subtotal"];
   const tableRows = [];
 
-  const subtotal = data.plan.price - data.coupon.discount;
+  const subtotal = data.plan.price - (data.coupon.code === '25072005' ? data.plan.price : data.coupon.discount);
 
   const row = [
     data.plan.name,
@@ -86,7 +88,7 @@ export function generateInvoice(data: InvoiceData) {
   tableRows.push(row);
 
   (doc as any).autoTable({
-    startY: 75,
+    startY: 80,
     head: [tableColumn],
     body: tableRows,
     theme: 'striped',
