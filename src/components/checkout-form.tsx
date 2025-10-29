@@ -11,19 +11,9 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Ticket, CreditCard, PartyPopper } from 'lucide-react';
+import { Loader2, Ticket, CreditCard } from 'lucide-react';
 import Script from 'next/script';
 import { generateInvoice, InvoiceData } from '@/lib/invoice';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import Link from 'next/link';
 
 const plans = {
   basic: { name: 'Basic Plan', price: 5000 },
@@ -228,7 +218,7 @@ export default function CheckoutForm() {
         total,
       };
       
-      generateInvoice(newInvoiceData);
+      await generateInvoice(newInvoiceData);
       window.location.href = 'https://forms.gle/a8Yhowx9EutCwbcw7';
 
     } catch (error) {
