@@ -263,7 +263,7 @@ export default function CheckoutForm() {
       currency: order.currency,
       name: 'Next Analytics',
       description: `Payment for ${plan.name}`,
-      image: 'https://github.com/Gagansidh-u/My-Webapp/blob/master/Picsart_25-10-18_16-37-29-081.png?raw=true',
+      image: '/images/logo.png',
       order_id: order.id,
       handler: async (response: any) => {
         setIsLoading(true);

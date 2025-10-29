@@ -50,7 +50,7 @@ export default function Header() {
     >
       <div className="container flex h-16 items-center">
         <Link href="/" className="flex items-center gap-2 header-glow">
-          <Image src="https://github.com/Gagansidh-u/My-Webapp/blob/master/Picsart_25-10-18_16-37-29-081.png?raw=true" alt="Next Analytics Logo" width={28} height={28} />
+          <Image src="/images/logo.png" alt="Next Analytics Logo" width={28} height={28} />
           <span className="text-lg font-bold">Next Analytics</span>
         </Link>
         <nav className="ml-10 hidden items-center space-x-6 md:flex">
@@ -74,7 +74,7 @@ export default function Header() {
                 </SheetDescription>
               <div className="flex h-full flex-col">
                 <div className="mb-8 flex items-center gap-2">
-                   <Image src="https://github.com/Gagansidh-u/My-Webapp/blob/master/Picsart_25-10-18_16-37-29-081.png?raw=true" alt="Next Analytics Logo" width={28} height={28} />
+                   <Image src="/images/logo.png" alt="Next Analytics Logo" width={28} height={28} />
                    <span className="text-lg font-bold">Next Analytics</span>
                 </div>
                 <nav className="flex flex-col items-start space-y-4">

@@ -61,7 +61,7 @@ export const metadata: Metadata = {
     images: ['/og-image.png'],
   },
 icons: {
-    icon: 'https://github.com/Gagansidh-u/My-Webapp/blob/master/Picsart_25-10-18_16-37-29-081.png?raw=true',
+    icon: '/images/logo.png',
     apple: '/apple-touch-icon.png',
   },
   manifest: '/manifest.json',
@@ -78,7 +78,7 @@ export default function RootLayout({
     '@type': 'LocalBusiness',
     name: 'Next Analytics',
     url: siteUrl,
-    logo: 'https://github.com/Gagansidh-u/My-Webapp/blob/master/Picsart_25-10-18_16-37-29-081.png?raw=true',
+    logo: `${siteUrl}/images/logo.png`,
     image: `${siteUrl}/og-image.png`,
     description: metadata.description as string,
     address: {

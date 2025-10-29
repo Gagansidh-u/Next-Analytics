@@ -23,6 +23,27 @@ export interface InvoiceData {
   total: number;
 }
 
+// Function to fetch and convert image to Base64
+async function getImageBase64(url: string): Promise<string | null> {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      console.error(`Failed to fetch image: ${response.statusText}`);
+      return null;
+    }
+    const blob = await response.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  } catch (error) {
+    console.error('Error converting image to Base64:', error);
+    return null;
+  }
+}
+
 export async function generateInvoice(data: InvoiceData) {
   const doc = new jsPDF();
   const date = new Date();
@@ -31,10 +52,16 @@ export async function generateInvoice(data: InvoiceData) {
     ? data.orderId.slice(5, 13).toUpperCase() 
     : data.orderId.slice(-8).toUpperCase();
 
-  // Header
+  // Fetch the logo and convert to base64
+  const logoBase64 = await getImageBase64('/images/logo.png');
+
+  // Header with Logo
+  if (logoBase64) {
+    doc.addImage(logoBase64, 'PNG', 14, 15, 10, 10);
+  }
   doc.setFontSize(22);
   doc.setFont('helvetica', 'bold');
-  doc.text('Next Analytics', 14, 22);
+  doc.text('Next Analytics', 28, 22);
 
   doc.setFontSize(10);
   doc.setFont('helvetica', 'normal');
