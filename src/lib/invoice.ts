@@ -108,9 +108,9 @@ export async function generateInvoice(data: InvoiceData) {
 
   const row = [
     data.plan.name,
-    `₹${data.plan.price.toFixed(2)}`,
-    data.coupon.code === '25072005' ? `100% OFF` : (data.coupon.isPay1 ? `PAY1 Coupon` : `₹${data.coupon.discount.toFixed(2)}`),
-    `₹${subtotalBeforeGst.toFixed(2)}`
+    data.plan.price.toFixed(2),
+    data.coupon.code === '25072005' ? `100% OFF` : (data.coupon.isPay1 ? `PAY1 Coupon` : data.coupon.discount.toFixed(2)),
+    subtotalBeforeGst.toFixed(2)
   ];
   tableRows.push(row);
 
@@ -139,21 +139,21 @@ export async function generateInvoice(data: InvoiceData) {
   doc.setFont('helvetica', 'bold');
   doc.text('Subtotal:', 130, yPos);
   doc.setFont('helvetica', 'normal');
-  doc.text(`₹${subtotalBeforeGst.toFixed(2)}`, 190, yPos, { align: 'right' });
+  doc.text(subtotalBeforeGst.toFixed(2), 190, yPos, { align: 'right' });
   yPos += 7;
 
   if (data.gst > 0) {
     doc.setFont('helvetica', 'bold');
     doc.text('GST (18%):', 130, yPos);
     doc.setFont('helvetica', 'normal');
-    doc.text(`₹${data.gst.toFixed(2)}`, 190, yPos, { align: 'right' });
+    doc.text(data.gst.toFixed(2), 190, yPos, { align: 'right' });
     yPos += 7;
   }
   
   doc.setFontSize(12);
   doc.setFont('helvetica', 'bold');
   doc.text('Total:', 130, yPos);
-  doc.text(`₹${data.total.toFixed(2)}`, 190, yPos, { align: 'right' });
+  doc.text(data.total.toFixed(2), 190, yPos, { align: 'right' });
 
   // Footer
   doc.setFontSize(10);
