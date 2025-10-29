@@ -359,7 +359,13 @@ export default function CheckoutForm() {
         onLoad={() => setIsRazorpayLoaded(true)}
       />
 
-    <Dialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
+    <Dialog open={showSuccessDialog} onOpenChange={(isOpen) => {
+      // Prevent closing the dialog by clicking outside
+      if (!isOpen && invoiceData) {
+        return;
+      }
+      setShowSuccessDialog(isOpen);
+    }}>
         <DialogContent className="sm:max-w-md" onInteractOutside={(e) => e.preventDefault()}>
             <DialogHeader>
                 <div className="flex justify-center">
@@ -367,7 +373,7 @@ export default function CheckoutForm() {
                 </div>
                 <DialogTitle className="text-center text-2xl">Order Successful!</DialogTitle>
                 <DialogDescription className="text-center">
-                    Thank you for your order. Download your invoice and proceed to the next step.
+                    Thank you for your order. Download your invoice and proceed to the next step to submit your data.
                 </DialogDescription>
             </DialogHeader>
             <DialogFooter className="justify-center">
