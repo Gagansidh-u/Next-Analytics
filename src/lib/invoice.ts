@@ -28,6 +28,8 @@ const logoUrl = 'https://github.com/Gagansidh-u/My-Webapp/blob/master/Picsart_25
 // Helper to fetch image and convert to Base64
 async function getImageBase64(url: string) {
   try {
+    // Note: Fetching directly from a raw GitHub URL might be unreliable.
+    // A better approach is to host the image on a CDN or within the app's public folder.
     const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`Failed to fetch image: ${response.statusText}`);
@@ -41,9 +43,10 @@ async function getImageBase64(url: string) {
     });
   } catch (error) {
     console.error("Error fetching or converting image:", error);
-    return null;
+    return null; // Return null if fetching fails
   }
 }
+
 
 export async function generateInvoice(data: InvoiceData) {
   const doc = new jsPDF();
