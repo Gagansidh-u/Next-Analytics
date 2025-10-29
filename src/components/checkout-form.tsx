@@ -12,6 +12,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Ticket, CreditCard } from 'lucide-react';
 import Script from 'next/script';
+import { addCustomer } from '@/firebase/firestore';
+import { useFirestore } from '@/firebase';
+
 
 const plans = {
   basic: { name: 'Basic Plan', price: 5000 },
@@ -40,6 +43,7 @@ export default function CheckoutForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { toast } = useToast();
+  const firestore = useFirestore();
 
   const [planId, setPlanId] = useState<keyof typeof plans | null>(null);
   const [plan, setPlan] = useState<{ name: string; price: number } | null>(null);
@@ -150,6 +154,16 @@ export default function CheckoutForm() {
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsLoading(true);
+    if (!firestore) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Database not available. Please try again later.',
+      });
+      setIsLoading(false);
+      return;
+    }
+
     if (!RAZORPAY_KEY) {
        toast({
         variant: 'destructive',
@@ -194,11 +208,21 @@ export default function CheckoutForm() {
         const result = await verifyPayment(verificationData);
 
         if (result.success) {
-          toast({
-            title: 'Payment Successful!',
-            description: 'Thank you for your purchase. You will be redirected shortly.',
-          });
-          window.location.href = 'https://forms.gle/a8Yhowx9EutCwbcw7';
+          try {
+            await addCustomer(firestore, { name: data.name, email: data.email });
+            toast({
+                title: 'Payment Successful!',
+                description: 'Thank you for your purchase. You will be redirected shortly.',
+            });
+            window.location.href = 'https://forms.gle/a8Yhowx9EutCwbcw7';
+          } catch (error) {
+            console.error("Error saving customer details:", error);
+            toast({
+                variant: 'destructive',
+                title: 'Post-Payment Error',
+                description: 'Your payment was successful, but we failed to save your details. Please contact support.',
+            });
+          }
         } else {
           toast({
             variant: 'destructive',
