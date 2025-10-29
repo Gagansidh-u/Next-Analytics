@@ -13,7 +13,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Ticket, CreditCard } from 'lucide-react';
 import Script from 'next/script';
-import { addCustomer } from '@/firebase/firestore';
 import { useFirestore } from '@/firebase';
 import { generateInvoice, InvoiceData } from '@/lib/invoice';
 
@@ -183,19 +182,17 @@ export default function CheckoutForm() {
     formData: FormValues,
     paymentDetails: { orderId: string; paymentId: string }
   ) => {
-    if (!firestore || !plan) {
+    if (!plan) {
       toast({
         variant: 'destructive',
         title: 'Error',
-        description: 'A database error occurred. Please contact support.',
+        description: 'A processing error occurred. Please contact support.',
       });
       setIsLoading(false);
       return;
     }
     
     try {
-      await addCustomer(firestore, { name: formData.name, email: formData.email });
-
       let discountAmount = 0;
       if (isFreeCoupon) {
           discountAmount = plan.price;
@@ -233,27 +230,26 @@ export default function CheckoutForm() {
       toast({
         variant: 'destructive',
         title: 'Post-Payment Error',
-        description: 'Your payment was successful, but we failed to save your details. Please contact support.',
+        description: 'Your payment was successful, but we failed to generate your invoice. Please contact support.',
       });
     } finally {
       setIsLoading(false);
     }
-  }, [firestore, plan, isFreeCoupon, isPay1Coupon, discount, couponCode, gst, total, toast]);
+  }, [plan, isFreeCoupon, isPay1Coupon, discount, couponCode, gst, total, toast]);
 
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsLoading(true);
 
     if (isFreeCoupon) {
-      const mockPaymentDetails = {
+      await handleSuccessfulOrder(data, {
         orderId: `FREE-${Date.now()}`,
         paymentId: `FREE-${Date.now()}`,
-      };
-      await handleSuccessfulOrder(data, mockPaymentDetails);
+      });
       return;
     }
 
-    if (!firestore || !plan || !RAZORPAY_KEY || !isRazorpayLoaded) {
+    if (!plan || !RAZORPAY_KEY || !isRazorpayLoaded) {
         toast({ variant: 'destructive', title: 'Error', description: 'Payment gateway is not ready. Please try again in a moment.' });
         setIsLoading(false);
         return;

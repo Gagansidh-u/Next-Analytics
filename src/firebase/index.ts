@@ -32,4 +32,3 @@ export {
   useFirestore,
 } from './provider';
 export {FirebaseClientProvider} from './client-provider';
-export * from './firestore';
