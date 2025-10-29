@@ -23,31 +23,6 @@ export interface InvoiceData {
   total: number;
 }
 
-const logoUrl = 'https://github.com/Gagansidh-u/My-Webapp/blob/master/Picsart_25-10-18_16-37-29-081.png?raw=true';
-
-// Helper to fetch image and convert to Base64
-async function getImageBase64(url: string) {
-  try {
-    // Note: Fetching directly from a raw GitHub URL might be unreliable.
-    // A better approach is to host the image on a CDN or within the app's public folder.
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch image: ${response.statusText}`);
-    }
-    const blob = await response.blob();
-    return new Promise<string>((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result as string);
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
-    });
-  } catch (error) {
-    console.error("Error fetching or converting image:", error);
-    return null; // Return null if fetching fails
-  }
-}
-
-
 export async function generateInvoice(data: InvoiceData) {
   const doc = new jsPDF();
   const date = new Date();
@@ -56,16 +31,10 @@ export async function generateInvoice(data: InvoiceData) {
     ? data.orderId.slice(5, 13).toUpperCase() 
     : data.orderId.slice(-8).toUpperCase();
 
-  const logoBase64 = await getImageBase64(logoUrl);
-
-  // Header with Logo
-  if (logoBase64) {
-    doc.addImage(logoBase64, 'PNG', 14, 15, 10, 10);
-  }
+  // Header
   doc.setFontSize(22);
   doc.setFont('helvetica', 'bold');
-  doc.text('Next Analytics', 28, 22);
-
+  doc.text('Next Analytics', 14, 22);
 
   doc.setFontSize(10);
   doc.setFont('helvetica', 'normal');
