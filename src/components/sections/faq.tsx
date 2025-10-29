@@ -1,4 +1,7 @@
+
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 const faqs = [
   {
@@ -12,6 +15,13 @@ const faqs = [
   {
     question: "Can I customize my dashboard?",
     answer: "Yes! While the Basic plan comes with a standard layout, our Professional and Enterprise plans offer extensive customization, including custom metrics, drill-down filters, and tailored branding to match your company's style."
+  },
+   {
+    question: "What if I accidentally close the page after payment?",
+    answer: "Don't worry. If you lose the data submission form link after your payment, we have a simple recovery process. Please visit our instruction page to learn how to get a new link.",
+    isLink: true,
+    link: '/lost-form',
+    linkText: 'View Instructions'
   },
   {
     question: "What if I need more than one revision?",
@@ -40,7 +50,14 @@ export default function Faq() {
               <AccordionItem key={index} value={`item-${index}`}>
                 <AccordionTrigger>{faq.question}</AccordionTrigger>
                 <AccordionContent>
-                  {faq.answer}
+                  <div className="space-y-4">
+                    <p>{faq.answer}</p>
+                    {faq.isLink && (
+                        <Button asChild variant="secondary">
+                            <Link href={faq.link!}>{faq.linkText}</Link>
+                        </Button>
+                    )}
+                  </div>
                 </AccordionContent>
               </AccordionItem>
             ))}

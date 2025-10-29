@@ -15,6 +15,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/coming-soon',
     '/checkout?plan=basic',
     '/checkout?plan=professional',
+    '/blog',
+    '/lost-form',
   ];
 
   return staticPages.map((page) => ({
