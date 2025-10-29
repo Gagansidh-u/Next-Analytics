@@ -23,6 +23,9 @@ export interface InvoiceData {
   total: number;
 }
 
+const logoUrl = 'https://github.com/Gagansidh-u/My-Webapp/blob/master/Picsart_25-10-18_16-37-29-081.png?raw=true';
+
+
 export function generateInvoice(data: InvoiceData) {
   const doc = new jsPDF();
   const date = new Date();
@@ -31,16 +34,18 @@ export function generateInvoice(data: InvoiceData) {
     ? data.orderId.slice(5, 13).toUpperCase() 
     : data.orderId.slice(-8).toUpperCase();
 
-  // Header
+  // Header with Logo
+  doc.addImage(logoUrl, 'PNG', 14, 15, 10, 10);
   doc.setFontSize(22);
   doc.setFont('helvetica', 'bold');
-  doc.text('Next Analytics', 14, 22);
+  doc.text('Next Analytics', 28, 22);
+
 
   doc.setFontSize(10);
   doc.setFont('helvetica', 'normal');
-  doc.text('Barnala, Punjab, India', 14, 28);
-  doc.text('Nextanalytics@outlook.com', 14, 32);
-  doc.text('nextanalytics.store', 14, 36);
+  doc.text('Barnala, Punjab, India', 14, 32);
+  doc.text('Nextanalytics@outlook.com', 14, 38);
+  doc.text('nextanalytics.store', 14, 44);
 
   doc.setFontSize(18);
   doc.setFont('helvetica', 'bold');
@@ -49,27 +54,27 @@ export function generateInvoice(data: InvoiceData) {
   // Bill To
   doc.setFontSize(11);
   doc.setFont('helvetica', 'bold');
-  doc.text('Bill To:', 14, 50);
+  doc.text('Bill To:', 14, 58);
   doc.setFont('helvetica', 'normal');
-  doc.text(data.customer.name, 14, 56);
-  doc.text(data.customer.email, 14, 62);
+  doc.text(data.customer.name, 14, 64);
+  doc.text(data.customer.email, 14, 70);
 
   // Invoice Details
   doc.setFontSize(11);
   doc.setFont('helvetica', 'bold');
-  doc.text('Invoice Number:', 130, 50);
-  doc.text('Invoice Date:', 130, 56);
-  doc.text('Order ID:', 130, 62);
+  doc.text('Invoice Number:', 130, 58);
+  doc.text('Invoice Date:', 130, 64);
+  doc.text('Order ID:', 130, 70);
   if (!data.paymentId.startsWith('FREE-')) {
-    doc.text('Payment ID:', 130, 68);
+    doc.text('Payment ID:', 130, 76);
   }
 
   doc.setFont('helvetica', 'normal');
-  doc.text(invoiceNumber, 190, 50, { align: 'right' });
-  doc.text(formattedDate, 190, 56, { align: 'right' });
-  doc.text(data.orderId, 190, 62, { align: 'right' });
+  doc.text(invoiceNumber, 190, 58, { align: 'right' });
+  doc.text(formattedDate, 190, 64, { align: 'right' });
+  doc.text(data.orderId, 190, 70, { align: 'right' });
   if (!data.paymentId.startsWith('FREE-')) {
-    doc.text(data.paymentId, 190, 68, { align: 'right' });
+    doc.text(data.paymentId, 190, 76, { align: 'right' });
   }
 
 
@@ -88,7 +93,7 @@ export function generateInvoice(data: InvoiceData) {
   tableRows.push(row);
 
   (doc as any).autoTable({
-    startY: 80,
+    startY: 85,
     head: [tableColumn],
     body: tableRows,
     theme: 'striped',
