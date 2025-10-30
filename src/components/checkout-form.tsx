@@ -220,10 +220,8 @@ export default function CheckoutForm() {
       
       await generateInvoice(newInvoiceData);
       
-      // Delay redirection to allow download to start
-      setTimeout(() => {
-        window.location.href = 'https://forms.gle/a8Yhowx9EutCwbcw7';
-      }, 2000); // 2-second delay
+      // Redirect after invoice generation is complete.
+      window.location.href = 'https://forms.gle/a8Yhowx9EutCwbcw7';
 
     } catch (error) {
       console.error('Error in post-payment processing:', error);
