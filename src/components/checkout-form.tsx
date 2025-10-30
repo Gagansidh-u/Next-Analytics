@@ -351,12 +351,12 @@ export default function CheckoutForm() {
   if (paymentSuccess) {
     return (
         <Card>
-            <CardHeader>
+            <CardHeader className="text-center">
                 <CardTitle>Payment Successful!</CardTitle>
                 <CardDescription>Your order is complete. Please follow the steps below.</CardDescription>
             </CardHeader>
             <CardContent>
-                <div className="text-center p-8 space-y-6">
+                <div className="text-center p-4 md:p-8 space-y-6">
                     <CheckCircle className="mx-auto h-16 w-16 text-green-500 mb-4" />
                     
                     <div className="space-y-4 rounded-lg border bg-card p-4">
@@ -367,9 +367,9 @@ export default function CheckoutForm() {
                                 Download Invoice
                             </a>
                         </Button>
-                        <div className="flex items-center justify-center gap-2 text-sm text-amber-500 p-3 bg-amber-500/10 rounded-md">
-                            <AlertCircle className="h-5 w-5" />
-                            <div className="text-left">
+                        <div className="flex flex-col md:flex-row items-center justify-center gap-2 text-sm text-amber-500 p-3 bg-amber-500/10 rounded-md">
+                            <AlertCircle className="h-8 w-8 md:h-5 md:w-5 flex-shrink-0" />
+                            <div className="text-center md:text-left">
                                 <strong>Important:</strong> You MUST download and save this invoice.
                                 The Invoice Number is required to recover your data submission link if you lose it.
                             </div>
