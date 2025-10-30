@@ -1,3 +1,4 @@
+
 // @/components/checkout-form.tsx
 'use client';
 
@@ -11,7 +12,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Ticket, CreditCard, Download, CheckCircle, UploadCloud } from 'lucide-react';
+import { Loader2, Ticket, CreditCard, Download, CheckCircle, UploadCloud, AlertCircle } from 'lucide-react';
 import Script from 'next/script';
 import { generateInvoice, InvoiceData } from '@/lib/invoice';
 import Link from 'next/link';
@@ -57,6 +58,7 @@ export default function CheckoutForm() {
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [invoiceUri, setInvoiceUri] = useState<string | null>(null);
   const [invoiceFileName, setInvoiceFileName] = useState('');
+  const [invoiceDownloaded, setInvoiceDownloaded] = useState(false);
 
 
   useEffect(() => {
@@ -356,25 +358,39 @@ export default function CheckoutForm() {
             <CardContent>
                 <div className="text-center p-8 space-y-6">
                     <CheckCircle className="mx-auto h-16 w-16 text-green-500 mb-4" />
-                    <div className="space-y-4">
+                    
+                    <div className="space-y-4 rounded-lg border bg-card p-4">
                         <h3 className="text-lg font-semibold">Step 1: Download Your Invoice</h3>
-                         <Button asChild size="lg">
+                         <Button asChild size="lg" onClick={() => setInvoiceDownloaded(true)}>
                             <a href={invoiceUri!} download={invoiceFileName}>
                                 <Download className="mr-2 h-5 w-5" />
                                 Download Invoice
                             </a>
                         </Button>
+                        <div className="flex items-center justify-center gap-2 text-sm text-amber-500 p-3 bg-amber-500/10 rounded-md">
+                            <AlertCircle className="h-5 w-5" />
+                            <div className="text-left">
+                                <strong>Important:</strong> You MUST download and save this invoice.
+                                The Invoice Number is required to recover your data submission link if you lose it.
+                            </div>
+                        </div>
                     </div>
-                     <div className="space-y-4">
+
+                     <div className="space-y-4 rounded-lg border bg-card p-4">
                         <h3 className="text-lg font-semibold">Step 2: Upload Your Data</h3>
-                        <Button asChild size="lg" variant="secondary">
+                        <Button asChild size="lg" variant="secondary" disabled={!invoiceDownloaded}>
                             <Link href="https://forms.gle/a8Yhowx9EutCwbcw7" target="_blank">
                                 <UploadCloud className="mr-2 h-5 w-5" />
                                 Proceed to Data Upload Form
                             </Link>
                         </Button>
+                        {!invoiceDownloaded && (
+                             <p className="text-sm text-muted-foreground">
+                                Please download your invoice in Step 1 to enable this button.
+                            </p>
+                        )}
                         <p className="text-sm text-muted-foreground">
-                            Lost this link? <Link href="/lost-form" className="underline">Recover it here</Link>.
+                            Lost this link later? <Link href="/lost-form" className="underline">Recover it here</Link>.
                         </p>
                     </div>
                 </div>
