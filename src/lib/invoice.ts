@@ -135,7 +135,7 @@ export async function generateInvoice(data: InvoiceData) {
   // Footer
   doc.setFontSize(10);
   doc.text('Thank you for your business!', 14, doc.internal.pageSize.height - 20);
-  doc.text('This is System Generated Invoice', 105, doc.internal.pageSize.height - 10, { align: 'center' });
+  doc.text('This is System Generated Invoice and does not require a signature', 105, doc.internal.pageSize.height - 10, { align: 'center' });
 
   // Save the PDF
   doc.save(`Invoice-${invoiceNumber}.pdf`);
