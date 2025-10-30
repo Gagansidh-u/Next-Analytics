@@ -34,7 +34,7 @@ export async function generateInvoice(data: InvoiceData): Promise<string> {
 
   // Header with Logo
   if (logoBase64) {
-    doc.addImage(logoBase64, 'JPEG', 14, 15, 10, 10);
+    doc.addImage(logoBase64, 'PNG', 14, 15, 10, 10);
   }
   doc.setFontSize(22);
   doc.setFont('helvetica', 'bold');
@@ -85,9 +85,13 @@ export async function generateInvoice(data: InvoiceData): Promise<string> {
 
   const row = [
     data.plan.name,
-    data.plan.price,
-    data.coupon.code === '25072005' ? `100% OFF` : (data.coupon.isPay1 ? `PAY1 Coupon` : data.coupon.discount),
-    subtotalBeforeGst
+    `Rs. ${data.plan.price.toFixed(2)}`,
+    data.coupon.code === '25072005' 
+      ? '100% OFF' 
+      : (data.coupon.isPay1 
+          ? 'PAY1 Coupon' 
+          : `Rs. ${data.coupon.discount.toFixed(2)}`),
+    `Rs. ${subtotalBeforeGst.toFixed(2)}`
   ];
   tableRows.push(row);
 
@@ -105,6 +109,11 @@ export async function generateInvoice(data: InvoiceData): Promise<string> {
       textColor: 255,
       fontStyle: 'bold',
     },
+    didParseCell: function(data: any) {
+        if (data.column.index > 0 && data.section === 'body') {
+            data.cell.styles.halign = 'right';
+        }
+    }
   });
 
   // Totals
@@ -116,21 +125,21 @@ export async function generateInvoice(data: InvoiceData): Promise<string> {
   doc.setFont('helvetica', 'bold');
   doc.text('Subtotal:', 130, yPos);
   doc.setFont('helvetica', 'normal');
-  doc.text(subtotalBeforeGst.toFixed(2), 190, yPos, { align: 'right' });
+  doc.text(`Rs. ${subtotalBeforeGst.toFixed(2)}`, 190, yPos, { align: 'right' });
   yPos += 7;
 
   if (data.gst > 0) {
     doc.setFont('helvetica', 'bold');
     doc.text('GST (18%):', 130, yPos);
     doc.setFont('helvetica', 'normal');
-    doc.text(data.gst.toFixed(2), 190, yPos, { align: 'right' });
+    doc.text(`Rs. ${data.gst.toFixed(2)}`, 190, yPos, { align: 'right' });
     yPos += 7;
   }
   
   doc.setFontSize(12);
   doc.setFont('helvetica', 'bold');
   doc.text('Total:', 130, yPos);
-  doc.text(data.total.toFixed(2), 190, yPos, { align: 'right' });
+  doc.text(`Rs. ${data.total.toFixed(2)}`, 190, yPos, { align: 'right' });
 
   // Footer
   doc.setFontSize(10);
