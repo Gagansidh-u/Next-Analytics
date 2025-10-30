@@ -11,9 +11,10 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Ticket, CreditCard } from 'lucide-react';
+import { Loader2, Ticket, CreditCard, Download } from 'lucide-react';
 import Script from 'next/script';
 import { generateInvoice, InvoiceData } from '@/lib/invoice';
+import Link from 'next/link';
 
 const plans = {
   basic: { name: 'Basic Plan', price: 5000 },
@@ -53,6 +54,7 @@ export default function CheckoutForm() {
   const [couponCode, setCouponCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isRazorpayLoaded, setIsRazorpayLoaded] = useState(false);
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
 
   useEffect(() => {
     const selectedPlanId = searchParams.get('plan') as keyof typeof plans;
@@ -220,8 +222,13 @@ export default function CheckoutForm() {
       
       await generateInvoice(newInvoiceData);
       
-      // Redirect after invoice generation is complete.
-      window.location.href = 'https://forms.gle/a8Yhowx9EutCwbcw7';
+      setPaymentSuccess(true);
+      setIsLoading(false);
+
+      toast({
+        title: 'Payment Successful!',
+        description: 'Your invoice is downloading. You can now proceed to the data upload form.',
+      });
 
     } catch (error) {
       console.error('Error in post-payment processing:', error);
@@ -230,7 +237,7 @@ export default function CheckoutForm() {
         title: 'Post-Payment Error',
         description: 'Your payment was successful, but we failed to generate your invoice. Please contact support.',
       });
-      setIsLoading(false); // Only set loading to false on error, as page will redirect
+      setIsLoading(false);
     }
   }, [plan, isFreeCoupon, isPay1Coupon, discount, couponCode, gst, total, toast]);
 
@@ -239,7 +246,6 @@ export default function CheckoutForm() {
     setIsLoading(true);
   
     if (isFreeCoupon) {
-      // Use await to ensure the function completes before moving on
       await handleSuccessfulOrder(data, {
         orderId: `FREE-${Date.now()}`,
         paymentId: `FREE-${Date.now()}`,
@@ -315,7 +321,6 @@ export default function CheckoutForm() {
     });
   
     rzp.open();
-    // Don't set isLoading to false here, as the handler will manage it.
   };
 
   if (!plan) {
@@ -331,6 +336,28 @@ export default function CheckoutForm() {
     }
     return <><CreditCard className="mr-2 h-4 w-4" /> Pay ₹{total.toFixed(2)}</>;
   };
+
+  if (paymentSuccess) {
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle>Payment Successful!</CardTitle>
+                <CardDescription>Your invoice should have started downloading. You can now proceed to upload your data.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <div className="text-center p-8">
+                    <Download className="mx-auto h-16 w-16 text-green-500 mb-4" />
+                    <p className="mb-6">If your download did not start automatically, please check your browser settings or contact support.</p>
+                    <Button asChild size="lg">
+                        <Link href="https://forms.gle/a8Yhowx9EutCwbcw7" target="_blank">
+                            Proceed to Data Upload Form
+                        </Link>
+                    </Button>
+                </div>
+            </CardContent>
+        </Card>
+    );
+  }
 
   return (
     <>
