@@ -12,7 +12,7 @@ export interface InvoiceData {
     email: string;
   };
   plan: {
-    name: string;
+    name:string;
     price: number;
   };
   coupon: {
@@ -24,7 +24,7 @@ export interface InvoiceData {
   total: number;
 }
 
-export async function generateInvoice(data: InvoiceData) {
+export async function generateInvoice(data: InvoiceData): Promise<string> {
   const doc = new jsPDF();
   const date = new Date();
   const formattedDate = format(date, 'MMM dd, yyyy');
@@ -137,6 +137,6 @@ export async function generateInvoice(data: InvoiceData) {
   doc.text('Thank you for your business!', 14, doc.internal.pageSize.height - 20);
   doc.text('This is System Generated Invoice and does not require a signature', 105, doc.internal.pageSize.height - 10, { align: 'center' });
 
-  // Save the PDF
-  doc.save(`Invoice-${invoiceNumber}.pdf`);
+  // Return the PDF as a data URI
+  return doc.output('datauristring');
 }

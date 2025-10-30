@@ -11,7 +11,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Ticket, CreditCard, Download } from 'lucide-react';
+import { Loader2, Ticket, CreditCard, Download, CheckCircle, UploadCloud } from 'lucide-react';
 import Script from 'next/script';
 import { generateInvoice, InvoiceData } from '@/lib/invoice';
 import Link from 'next/link';
@@ -55,6 +55,9 @@ export default function CheckoutForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [isRazorpayLoaded, setIsRazorpayLoaded] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [invoiceUri, setInvoiceUri] = useState<string | null>(null);
+  const [invoiceFileName, setInvoiceFileName] = useState('');
+
 
   useEffect(() => {
     const selectedPlanId = searchParams.get('plan') as keyof typeof plans;
@@ -219,12 +222,18 @@ export default function CheckoutForm() {
         gst,
         total,
       };
+
+      const pdfDataUri = await generateInvoice(newInvoiceData);
+      const invoiceNumber = paymentDetails.orderId.startsWith('FREE-') 
+        ? paymentDetails.orderId.slice(5, 13).toUpperCase() 
+        : paymentDetails.orderId.slice(-8).toUpperCase();
       
-      await generateInvoice(newInvoiceData);
+      setInvoiceUri(pdfDataUri);
+      setInvoiceFileName(`Invoice-${invoiceNumber}.pdf`);
       
       toast({
         title: 'Payment Successful!',
-        description: 'Your invoice is downloading. You can now proceed to the data upload form.',
+        description: 'Please download your invoice and proceed to the next step.',
       });
       
       setPaymentSuccess(true);
@@ -342,17 +351,32 @@ export default function CheckoutForm() {
         <Card>
             <CardHeader>
                 <CardTitle>Payment Successful!</CardTitle>
-                <CardDescription>Your invoice should have started downloading. You can now proceed to upload your data.</CardDescription>
+                <CardDescription>Your order is complete. Please follow the steps below.</CardDescription>
             </CardHeader>
             <CardContent>
-                <div className="text-center p-8">
-                    <Download className="mx-auto h-16 w-16 text-green-500 mb-4" />
-                    <p className="mb-6">If your download did not start automatically, please check your browser settings or contact support.</p>
-                    <Button asChild size="lg">
-                        <Link href="https://forms.gle/a8Yhowx9EutCwbcw7" target="_blank">
-                            Proceed to Data Upload Form
-                        </Link>
-                    </Button>
+                <div className="text-center p-8 space-y-6">
+                    <CheckCircle className="mx-auto h-16 w-16 text-green-500 mb-4" />
+                    <div className="space-y-4">
+                        <h3 className="text-lg font-semibold">Step 1: Download Your Invoice</h3>
+                         <Button asChild size="lg">
+                            <a href={invoiceUri!} download={invoiceFileName}>
+                                <Download className="mr-2 h-5 w-5" />
+                                Download Invoice
+                            </a>
+                        </Button>
+                    </div>
+                     <div className="space-y-4">
+                        <h3 className="text-lg font-semibold">Step 2: Upload Your Data</h3>
+                        <Button asChild size="lg" variant="secondary">
+                            <Link href="https://forms.gle/a8Yhowx9EutCwbcw7" target="_blank">
+                                <UploadCloud className="mr-2 h-5 w-5" />
+                                Proceed to Data Upload Form
+                            </Link>
+                        </Button>
+                        <p className="text-sm text-muted-foreground">
+                            Lost this link? <Link href="/lost-form" className="underline">Recover it here</Link>.
+                        </p>
+                    </div>
                 </div>
             </CardContent>
         </Card>
