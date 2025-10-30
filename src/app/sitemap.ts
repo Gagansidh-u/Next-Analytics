@@ -6,17 +6,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages = [
     '',
     '/about',
+    '/blog',
     '/careers',
-    '/contact',
-    '/privacy',
-    '/refund-policy',
-    '/terms',
-    '/social',
-    '/coming-soon',
     '/checkout?plan=basic',
     '/checkout?plan=professional',
-    '/blog',
+    '/coming-soon',
+    '/contact',
     '/lost-form',
+    '/privacy',
+    '/refund-policy',
+    '/shipping-policy',
+    '/social',
+    '/terms',
   ];
 
   return staticPages.map((page) => ({

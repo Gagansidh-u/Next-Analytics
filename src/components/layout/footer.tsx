@@ -58,6 +58,7 @@ export default function Footer() {
               <li><Link href="/terms" className="text-muted-foreground hover:text-foreground">Terms</Link></li>
               <li><Link href="/privacy" className="text-muted-foreground hover:text-foreground">Privacy</Link></li>
               <li><Link href="/refund-policy" className="text-muted-foreground hover:text-foreground">Refund Policy</Link></li>
+              <li><Link href="/shipping-policy" className="text-muted-foreground hover:text-foreground">Shipping Policy</Link></li>
             </ul>
           </div>
         </div>
