@@ -219,7 +219,11 @@ export default function CheckoutForm() {
       };
       
       await generateInvoice(newInvoiceData);
-      window.location.href = 'https://forms.gle/a8Yhowx9EutCwbcw7';
+      
+      // Delay redirection to allow download to start
+      setTimeout(() => {
+        window.location.href = 'https://forms.gle/a8Yhowx9EutCwbcw7';
+      }, 2000); // 2-second delay
 
     } catch (error) {
       console.error('Error in post-payment processing:', error);
@@ -228,8 +232,7 @@ export default function CheckoutForm() {
         title: 'Post-Payment Error',
         description: 'Your payment was successful, but we failed to generate your invoice. Please contact support.',
       });
-    } finally {
-      setIsLoading(false);
+      setIsLoading(false); // Only set loading to false on error, as page will redirect
     }
   }, [plan, isFreeCoupon, isPay1Coupon, discount, couponCode, gst, total, toast]);
 
