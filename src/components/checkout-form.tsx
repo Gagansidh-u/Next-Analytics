@@ -222,13 +222,12 @@ export default function CheckoutForm() {
       
       await generateInvoice(newInvoiceData);
       
-      setPaymentSuccess(true);
-      setIsLoading(false);
-
       toast({
         title: 'Payment Successful!',
         description: 'Your invoice is downloading. You can now proceed to the data upload form.',
       });
+      
+      setPaymentSuccess(true);
 
     } catch (error) {
       console.error('Error in post-payment processing:', error);
@@ -237,7 +236,8 @@ export default function CheckoutForm() {
         title: 'Post-Payment Error',
         description: 'Your payment was successful, but we failed to generate your invoice. Please contact support.',
       });
-      setIsLoading(false);
+    } finally {
+        setIsLoading(false);
     }
   }, [plan, isFreeCoupon, isPay1Coupon, discount, couponCode, gst, total, toast]);
 
