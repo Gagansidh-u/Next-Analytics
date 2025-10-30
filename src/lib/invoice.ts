@@ -2,6 +2,7 @@
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { format } from 'date-fns';
+import { logoBase64 } from './logo-data';
 
 export interface InvoiceData {
   orderId: string;
@@ -23,30 +24,6 @@ export interface InvoiceData {
   total: number;
 }
 
-// Function to fetch and convert image to Base64
-async function getImageBase64(url: string): Promise<string | null> {
-  try {
-    // This needs to be a full URL for the fetch to work on the server-side.
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-    const response = await fetch(new URL(url, baseUrl).toString());
-    
-    if (!response.ok) {
-      console.error(`Failed to fetch image: ${response.statusText}`);
-      return null;
-    }
-    const blob = await response.blob();
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result as string);
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
-    });
-  } catch (error) {
-    console.error('Error converting image to Base64:', error);
-    return null;
-  }
-}
-
 export async function generateInvoice(data: InvoiceData) {
   const doc = new jsPDF();
   const date = new Date();
@@ -55,12 +32,9 @@ export async function generateInvoice(data: InvoiceData) {
     ? data.orderId.slice(5, 13).toUpperCase() 
     : data.orderId.slice(-8).toUpperCase();
 
-  // Fetch the logo and convert to base64
-  const logoBase64 = await getImageBase64('/images/logo.png');
-
   // Header with Logo
   if (logoBase64) {
-    doc.addImage(logoBase64, 'PNG', 14, 15, 10, 10);
+    doc.addImage(logoBase64, 'JPEG', 14, 15, 10, 10);
   }
   doc.setFontSize(22);
   doc.setFont('helvetica', 'bold');
@@ -161,7 +135,7 @@ export async function generateInvoice(data: InvoiceData) {
   // Footer
   doc.setFontSize(10);
   doc.text('Thank you for your business!', 14, doc.internal.pageSize.height - 20);
-  doc.text('This is a computer-generated invoice and does not require a signature.', 105, doc.internal.pageSize.height - 10, { align: 'center' });
+  doc.text('This is System Generated Invoice', 105, doc.internal.pageSize.height - 10, { align: 'center' });
 
   // Save the PDF
   doc.save(`Invoice-${invoiceNumber}.pdf`);
