@@ -2,7 +2,7 @@
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { format } from 'date-fns';
-import { logoBase64 } from './logo-data';
+import { logoUrl } from './logo-data';
 
 export interface InvoiceData {
   orderId: string;
@@ -24,6 +24,18 @@ export interface InvoiceData {
   total: number;
 }
 
+// Helper function to load the image and return a promise
+function loadImage(url: string): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = 'Anonymous'; // Required for images from other domains, good practice
+    img.onload = () => resolve(img);
+    img.onerror = (err) => reject(err);
+    img.src = url;
+  });
+}
+
+
 export async function generateInvoice(data: InvoiceData): Promise<string> {
   const doc = new jsPDF();
   const date = new Date();
@@ -33,9 +45,14 @@ export async function generateInvoice(data: InvoiceData): Promise<string> {
     : data.orderId.slice(-8).toUpperCase();
 
   // Header with Logo
-  if (logoBase64) {
-    doc.addImage(logoBase64, 'PNG', 14, 15, 10, 10);
+  try {
+    const logoImage = await loadImage(logoUrl);
+    doc.addImage(logoImage, 'PNG', 14, 15, 10, 10);
+  } catch (error) {
+    console.error("Error loading logo for PDF:", error);
+    // Continue without the logo if it fails
   }
+
   doc.setFontSize(22);
   doc.setFont('helvetica', 'bold');
   doc.text('Next Analytics', 28, 22);

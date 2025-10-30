@@ -1,2 +1,5 @@
 // src/lib/logo-data.ts
-export const logoBase64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADdSURBVFhH7c9BCsIwEAXQp3AXXXQRXXTqod4gBC8iiB4kin2s0Cq06AW8SNd/3T0TJSz8IMmQC84XpZlKJDPAyBg2MPiZ4JFnZ2ZgYPj/8wADg5FjZGD4v/wDATuDw2Fg+D/zBwZuB4bDweD/zB8YOBsYDAaD/zN/YCDtA4bjwfg/8wcG0jYw9J8ZGBgZGYFR+R4Y/M8gAyMD42dgeweG/zMvMOwCDAanYGD4z1w+AJ/lAwOf5QMDn+UDA5/lAwOf5QMDn+UDA5/lA/+S/gB4aR0sFrj3hAAAAABJRU5ErkJggg==';
+
+// Since Next.js serves files from the `public` directory at the root,
+// we can directly reference the logo's public URL.
+export const logoUrl = '/images/logo.png';
