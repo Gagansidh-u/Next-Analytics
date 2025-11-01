@@ -239,6 +239,8 @@ export default function CheckoutForm() {
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsLoading(true);
+    
+    const appliedCoupon = form.getValues('coupon')?.toUpperCase();
 
     if (isFreeCoupon) {
       await handleSuccessfulOrder(data, {
@@ -248,11 +250,22 @@ export default function CheckoutForm() {
       return;
     }
 
+    if(appliedCoupon === 'OFFNEXT15') {
+      if (planId === 'basic') {
+        window.location.href = 'https://rzp.io/rzp/Off15785878888';
+        return;
+      }
+      if (planId === 'professional') {
+        window.location.href = 'https://rzp.io/rzp/Off15784584854';
+        return;
+      }
+    }
+
     if (planId === 'basic') {
       window.location.href = 'https://rzp.io/rzp/07864887';
       return;
     }
-     if (planId === 'professional') {
+    if (planId === 'professional') {
       window.location.href = 'https://rzp.io/rzp/75802580';
       return;
     }
