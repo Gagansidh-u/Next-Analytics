@@ -222,7 +222,7 @@ export default function CheckoutForm() {
       });
       
       const successId = 'Nextaz771941228675280AsDfGhJkLzXcVbNm';
-      router.push(`/payment-success/${successId}?name=${encodeURIComponent(formData.name)}`);
+      router.push(`/${successId}?name=${encodeURIComponent(formData.name)}`);
 
     } catch (error) {
       console.error('Error in post-payment processing:', error);
@@ -447,3 +447,5 @@ export default function CheckoutForm() {
     </>
   );
 }
+
+    
