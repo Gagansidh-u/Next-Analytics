@@ -240,20 +240,20 @@ export default function CheckoutForm() {
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsLoading(true);
 
+    if (isFreeCoupon) {
+      await handleSuccessfulOrder(data, {
+        orderId: `FREE-${Date.now()}`,
+        paymentId: `FREE-${Date.now()}`,
+      });
+      return;
+    }
+
     if (planId === 'basic') {
       window.location.href = 'https://rzp.io/rzp/07864887';
       return;
     }
      if (planId === 'professional') {
       window.location.href = 'https://rzp.io/rzp/75802580';
-      return;
-    }
-  
-    if (isFreeCoupon) {
-      await handleSuccessfulOrder(data, {
-        orderId: `FREE-${Date.now()}`,
-        paymentId: `FREE-${Date.now()}`,
-      });
       return;
     }
   
@@ -412,4 +412,57 @@ export default function CheckoutForm() {
                     <span>-₹{plan.price.toFixed(2)}</span>
                   </div>
                 ) : isPay1Coupon ? (
-                  <div className="flex justify-between text-green-
+                  <div className="flex justify-between text-green-500">
+                    <span>Special Discount ("PAY1")</span>
+                    <span>-₹{(plan.price - (1 / (1 + GST_RATE))).toFixed(2)}</span>
+                  </div>
+                ) : discount > 0 && (
+                  <div className="flex justify-between text-green-500">
+                    <span>Discount ({(discount * 100).toFixed(0)}%)</span>
+                    <span>-₹{(plan.price * discount).toFixed(2)}</span>
+                  </div>
+                )}
+                
+                <div className="flex justify-between">
+                <span>Subtotal</span>
+                <span>₹{(total / (1 + GST_RATE)).toFixed(2)}</span>
+                </div>
+                
+                <div className="flex justify-between">
+                <span>GST (18%)</span>
+                <span>₹{gst.toFixed(2)}</span>
+                </div>
+                
+                <div className="flex justify-between text-lg font-bold">
+                <span>Total</span>
+                <span>₹{total.toFixed(2)}</span>
+                </div>
+            </CardContent>
+            </Card>
+
+            <Card>
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                        <Ticket />
+                        Have a Coupon?
+                    </CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="flex gap-2">
+                        <Input 
+                            value={couponCode}
+                            onChange={(e) => setCouponCode(e.target.value)}
+                            placeholder="Enter coupon code"
+                            className="flex-1"
+                        />
+                        <Button onClick={applyCoupon}>Apply</Button>
+                    </div>
+                </CardContent>
+            </Card>
+        </div>
+      </div>
+    </>
+  );
+}
+
+    
