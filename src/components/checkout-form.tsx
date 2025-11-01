@@ -239,6 +239,11 @@ export default function CheckoutForm() {
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsLoading(true);
+
+    if (planId === 'basic') {
+      window.location.href = 'https://rzp.io/rzp/07864887';
+      return;
+    }
   
     if (isFreeCoupon) {
       await handleSuccessfulOrder(data, {
@@ -329,6 +334,9 @@ export default function CheckoutForm() {
     if (isFreeCoupon) {
       return 'Get for Free';
     }
+    if (planId === 'basic') {
+        return <><CreditCard className="mr-2 h-4 w-4" /> Proceed to Pay</>;
+    }
     return <><CreditCard className="mr-2 h-4 w-4" /> Pay ₹{total.toFixed(2)}</>;
   };
 
@@ -375,7 +383,7 @@ export default function CheckoutForm() {
                     </FormItem>
                   )}
                 />
-                <Button type="submit" className="w-full" disabled={isLoading || (!isRazorpayLoaded && !isFreeCoupon)}>
+                <Button type="submit" className="w-full" disabled={isLoading || (!isRazorpayLoaded && !isFreeCoupon && planId !== 'basic')}>
                   {getButtonText()}
                 </Button>
               </form>
@@ -422,7 +430,7 @@ export default function CheckoutForm() {
                 )}
                 <div className="border-t pt-4 flex justify-between font-bold text-lg">
                 <span>Total</span>
-                <span>₹{total.toFixed(2)}</span>
+                 <span>₹{planId === 'basic' ? plan.price.toFixed(2) : total.toFixed(2)}</span>
                 </div>
             </CardContent>
             </Card>
@@ -447,5 +455,3 @@ export default function CheckoutForm() {
     </>
   );
 }
-
-    
