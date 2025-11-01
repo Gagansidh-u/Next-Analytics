@@ -40,13 +40,6 @@ declare global {
     }
 }
 
-function generateUniqueId() {
-  const prefix = 'Nexta';
-  const timestamp = Date.now();
-  const randomPart = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-  return `${prefix}${timestamp}${randomPart}`;
-}
-
 export default function CheckoutForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -200,15 +193,6 @@ export default function CheckoutForm() {
     try {
       // Invoice generation is temporarily disabled
       /*
-      let discountAmount = 0;
-      if (isFreeCoupon) {
-          discountAmount = plan.price;
-      } else if (isPay1Coupon) {
-          discountAmount = plan.price + (plan.price * GST_RATE) - 1;
-      } else {
-          discountAmount = plan.price * discount;
-      }
-
       const newInvoiceData: InvoiceData = {
         orderId: paymentDetails.orderId,
         paymentId: paymentDetails.paymentId,
@@ -237,7 +221,7 @@ export default function CheckoutForm() {
         description: 'Redirecting you to the next step...',
       });
       
-      const successId = generateUniqueId();
+      const successId = 'Nextaz771941228675280AsDfGhJkLzXcVbNm';
       router.push(`/payment-success/${successId}?name=${encodeURIComponent(formData.name)}`);
 
     } catch (error) {
@@ -463,5 +447,3 @@ export default function CheckoutForm() {
     </>
   );
 }
-
-    
