@@ -12,9 +12,9 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Ticket, CreditCard, Download, CheckCircle, UploadCloud, AlertCircle } from 'lucide-react';
+import { Loader2, Ticket, CreditCard } from 'lucide-react';
 import Script from 'next/script';
-import { generateInvoice, InvoiceData } from '@/lib/invoice';
+// import { generateInvoice, InvoiceData } from '@/lib/invoice';
 import Link from 'next/link';
 
 const plans = {
@@ -40,6 +40,13 @@ declare global {
     }
 }
 
+function generateUniqueId() {
+  const prefix = 'Nexta';
+  const timestamp = Date.now();
+  const randomPart = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  return `${prefix}${timestamp}${randomPart}`;
+}
+
 export default function CheckoutForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -55,12 +62,7 @@ export default function CheckoutForm() {
   const [couponCode, setCouponCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isRazorpayLoaded, setIsRazorpayLoaded] = useState(false);
-  const [paymentSuccess, setPaymentSuccess] = useState(false);
-  const [invoiceUri, setInvoiceUri] = useState<string | null>(null);
-  const [invoiceFileName, setInvoiceFileName] = useState('');
-  const [invoiceDownloaded, setInvoiceDownloaded] = useState(false);
-
-
+  
   useEffect(() => {
     const selectedPlanId = searchParams.get('plan') as keyof typeof plans;
     if (selectedPlanId && plans[selectedPlanId]) {
@@ -196,6 +198,8 @@ export default function CheckoutForm() {
     }
     
     try {
+      // Invoice generation is temporarily disabled
+      /*
       let discountAmount = 0;
       if (isFreeCoupon) {
           discountAmount = plan.price;
@@ -225,32 +229,28 @@ export default function CheckoutForm() {
         total,
       };
 
-      const pdfDataUri = await generateInvoice(newInvoiceData);
-      const invoiceNumber = paymentDetails.orderId.startsWith('FREE-') 
-        ? paymentDetails.orderId.slice(5, 13).toUpperCase() 
-        : paymentDetails.orderId.slice(-8).toUpperCase();
-      
-      setInvoiceUri(pdfDataUri);
-      setInvoiceFileName(`Invoice-${invoiceNumber}.pdf`);
-      
+      await generateInvoice(newInvoiceData);
+      */
+     
       toast({
         title: 'Payment Successful!',
-        description: 'Please download your invoice and proceed to the next step.',
+        description: 'Redirecting you to the next step...',
       });
       
-      setPaymentSuccess(true);
+      const successId = generateUniqueId();
+      router.push(`/payment-success/${successId}?name=${encodeURIComponent(formData.name)}`);
 
     } catch (error) {
       console.error('Error in post-payment processing:', error);
       toast({
         variant: 'destructive',
         title: 'Post-Payment Error',
-        description: 'Your payment was successful, but we failed to generate your invoice. Please contact support.',
+        description: 'Your payment was successful, but we failed to proceed. Please contact support.',
       });
     } finally {
         setIsLoading(false);
     }
-  }, [plan, isFreeCoupon, isPay1Coupon, discount, couponCode, gst, total, toast]);
+  }, [plan, router, toast]);
 
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
@@ -347,57 +347,6 @@ export default function CheckoutForm() {
     }
     return <><CreditCard className="mr-2 h-4 w-4" /> Pay ₹{total.toFixed(2)}</>;
   };
-
-  if (paymentSuccess) {
-    return (
-        <Card>
-            <CardHeader className="text-center">
-                <CardTitle>Payment Successful!</CardTitle>
-                <CardDescription>Your order is complete. Please follow the steps below.</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <div className="text-center p-4 md:p-8 space-y-6">
-                    <CheckCircle className="mx-auto h-16 w-16 text-green-500 mb-4" />
-                    
-                    <div className="space-y-4 rounded-lg border bg-card p-4">
-                        <h3 className="text-lg font-semibold">Step 1: Download Your Invoice</h3>
-                         <Button asChild size="lg" onClick={() => setInvoiceDownloaded(true)}>
-                            <a href={invoiceUri!} download={invoiceFileName}>
-                                <Download className="mr-2 h-5 w-5" />
-                                Download Invoice
-                            </a>
-                        </Button>
-                        <div className="flex flex-col md:flex-row items-center justify-center gap-2 text-sm text-amber-500 p-3 bg-amber-500/10 rounded-md">
-                            <AlertCircle className="h-8 w-8 md:h-5 md:w-5 flex-shrink-0" />
-                            <div className="text-center md:text-left">
-                                <strong>Important:</strong> You MUST download and save this invoice.
-                                The Invoice Number is required to recover your data submission link if you lose it.
-                            </div>
-                        </div>
-                    </div>
-
-                     <div className="space-y-4 rounded-lg border bg-card p-4">
-                        <h3 className="text-lg font-semibold">Step 2: Upload Your Data</h3>
-                        <Button asChild size="lg" variant="secondary" disabled={!invoiceDownloaded}>
-                            <Link href="https://forms.gle/a8Yhowx9EutCwbcw7" target="_blank">
-                                <UploadCloud className="mr-2 h-5 w-5" />
-                                Proceed to Data Upload Form
-                            </Link>
-                        </Button>
-                        {!invoiceDownloaded && (
-                             <p className="text-sm text-muted-foreground">
-                                Please download your invoice in Step 1 to enable this button.
-                            </p>
-                        )}
-                        <p className="text-sm text-muted-foreground">
-                            Lost this link later? <Link href="/lost-form" className="underline">Recover it here</Link>.
-                        </p>
-                    </div>
-                </div>
-            </CardContent>
-        </Card>
-    );
-  }
 
   return (
     <>
@@ -514,3 +463,5 @@ export default function CheckoutForm() {
     </>
   );
 }
+
+    
