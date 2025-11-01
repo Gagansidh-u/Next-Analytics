@@ -244,6 +244,10 @@ export default function CheckoutForm() {
       window.location.href = 'https://rzp.io/rzp/07864887';
       return;
     }
+     if (planId === 'professional') {
+      window.location.href = 'https://rzp.io/rzp/75802580';
+      return;
+    }
   
     if (isFreeCoupon) {
       await handleSuccessfulOrder(data, {
@@ -334,7 +338,7 @@ export default function CheckoutForm() {
     if (isFreeCoupon) {
       return 'Get for Free';
     }
-    if (planId === 'basic') {
+    if (planId === 'basic' || planId === 'professional') {
         return <><CreditCard className="mr-2 h-4 w-4" /> Proceed to Pay</>;
     }
     return <><CreditCard className="mr-2 h-4 w-4" /> Pay ₹{total.toFixed(2)}</>;
@@ -383,7 +387,7 @@ export default function CheckoutForm() {
                     </FormItem>
                   )}
                 />
-                <Button type="submit" className="w-full" disabled={isLoading || (!isRazorpayLoaded && !isFreeCoupon && planId !== 'basic')}>
+                <Button type="submit" className="w-full" disabled={isLoading || (!isRazorpayLoaded && !isFreeCoupon && planId !== 'basic' && planId !== 'professional')}>
                   {getButtonText()}
                 </Button>
               </form>
@@ -408,50 +412,4 @@ export default function CheckoutForm() {
                     <span>-₹{plan.price.toFixed(2)}</span>
                   </div>
                 ) : isPay1Coupon ? (
-                  <div className="flex justify-between text-green-500">
-                      <span>PAY1 Coupon</span>
-                      <span>-₹{(plan.price * (1+GST_RATE) - 1).toFixed(2)}</span>
-                  </div>
-                ) : (
-                  <>
-                    {discount > 0 && (
-                      <div className="flex justify-between text-green-500">
-                        <span>Discount ({(discount * 100).toFixed(0)}%)</span>
-                        <span>-₹{(plan.price * discount).toFixed(2)}</span>
-                      </div>
-                    )}
-                  </>
-                )}
-                 {!isFreeCoupon && !isPay1Coupon && (
-                    <div className="flex justify-between">
-                        <span>GST (18%)</span>
-                        <span>+₹{gst.toFixed(2)}</span>
-                    </div>
-                )}
-                <div className="border-t pt-4 flex justify-between font-bold text-lg">
-                <span>Total</span>
-                 <span>₹{planId === 'basic' ? plan.price.toFixed(2) : total.toFixed(2)}</span>
-                </div>
-            </CardContent>
-            </Card>
-
-            <Card>
-                <CardHeader>
-                    <CardTitle>Have a coupon?</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <div className="flex space-x-2">
-                        <Input 
-                            placeholder="Enter coupon code" 
-                            value={couponCode} 
-                            onChange={(e) => setCouponCode(e.target.value)}
-                        />
-                        <Button onClick={applyCoupon}><Ticket className="mr-2 h-4 w-4" /> Apply</Button>
-                    </div>
-                </CardContent>
-            </Card>
-        </div>
-      </div>
-    </>
-  );
-}
+                  <div className="flex justify-between text-green-
