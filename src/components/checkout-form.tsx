@@ -99,7 +99,7 @@ export default function CheckoutForm() {
     const upperCaseCoupon = couponCode.toUpperCase();
     form.setValue('coupon', upperCaseCoupon);
 
-    if (upperCaseCoupon === 'OFFNEXT15') {
+    if (upperCaseCoupon === 'NEXTOFF15') {
       setDiscount(0.15);
       setIsPay1Coupon(false);
       setIsFreeCoupon(false);
@@ -250,23 +250,23 @@ export default function CheckoutForm() {
       return;
     }
 
-    if(appliedCoupon === 'OFFNEXT15') {
+    if(appliedCoupon === 'NEXTOFF15') {
       if (planId === 'basic') {
-        window.location.href = 'https://rzp.io/rzp/Off15785878888';
+        window.location.href = 'https://rzp.io/rzp/25072';
         return;
       }
       if (planId === 'professional') {
-        window.location.href = 'https://rzp.io/rzp/Off15784584854';
+        window.location.href = 'https://rzp.io/rzp/25074';
         return;
       }
     }
 
     if (planId === 'basic') {
-      window.location.href = 'https://rzp.io/rzp/07864887';
+      window.location.href = 'https://rzp.io/rzp/25071';
       return;
     }
     if (planId === 'professional') {
-      window.location.href = 'https://rzp.io/rzp/75802580';
+      window.location.href = 'https://rzp.io/rzp/25073';
       return;
     }
   
@@ -442,7 +442,7 @@ export default function CheckoutForm() {
                 </div>
                 
                 <div className="flex justify-between">
-                <span>GST (18%)</span>
+                <span>GST (18%+)</span>
                 <span>₹{gst.toFixed(2)}</span>
                 </div>
                 
@@ -477,5 +477,7 @@ export default function CheckoutForm() {
     </>
   );
 }
+
+    
 
     
