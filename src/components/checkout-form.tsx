@@ -1,8 +1,7 @@
-
 // @/components/checkout-form.tsx
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -12,15 +11,13 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Ticket, CreditCard, Download, CheckCircle, UploadCloud, AlertCircle } from 'lucide-react';
-import Script from 'next/script';
-import { generateInvoice, InvoiceData } from '@/lib/invoice';
-import Link from 'next/link';
+import { Loader2, Ticket, CreditCard, AlertTriangle } from 'lucide-react';
+import { load, Cashfree } from '@cashfreepayments/cashfree-js';
 
 const plans = {
   basic: { name: 'Basic Plan', price: 5000 },
   professional: { name: 'Professional Plan', price: 12000 },
-  enterprise: { name: 'Enterprise Plan', price: 0 }, // Custom price, handle separately
+  enterprise: { name: 'Enterprise Plan', price: 0 },
 };
 
 const formSchema = z.object({
@@ -31,16 +28,9 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-const RAZORPAY_KEY = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
 const GST_RATE = 0.18;
 
-declare global {
-    interface Window {
-        Razorpay: any;
-    }
-}
-
-export default function CheckoutForm() {
+function CheckoutFormComponent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { toast } = useToast();
@@ -54,12 +44,42 @@ export default function CheckoutForm() {
   const [total, setTotal] = useState(0);
   const [couponCode, setCouponCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isRazorpayLoaded, setIsRazorpayLoaded] = useState(false);
-  const [paymentSuccess, setPaymentSuccess] = useState(false);
-  const [invoiceUri, setInvoiceUri] = useState<string | null>(null);
-  const [invoiceFileName, setInvoiceFileName] = useState('');
-  const [invoiceDownloaded, setInvoiceDownloaded] = useState(false);
+  const [cashfree, setCashfree] = useState<Cashfree | null>(null);
 
+   useEffect(() => {
+    const status = searchParams.get('status');
+    const reason = searchParams.get('reason');
+    if (status === 'failed') {
+      toast({
+        variant: 'destructive',
+        title: 'Payment Failed',
+        description: `Your payment could not be processed. Reason: ${reason || 'Unknown'}. Please try again.`,
+      });
+    } else if (status === 'error') {
+       toast({
+        variant: 'destructive',
+        title: 'Payment Error',
+        description: 'An unexpected error occurred during payment verification. Please contact support.',
+      });
+    }
+  }, [searchParams, toast]);
+
+  useEffect(() => {
+    const initializeCashfree = async () => {
+      try {
+        const cfInstance = await load({ mode: 'production' });
+        setCashfree(cfInstance);
+      } catch (error) {
+        console.error('Failed to initialize Cashfree:', error);
+        toast({
+          variant: 'destructive',
+          title: 'Payment Gateway Error',
+          description: 'Could not load the payment gateway. Please refresh the page.',
+        });
+      }
+    };
+    initializeCashfree();
+  }, [toast]);
 
   useEffect(() => {
     const selectedPlanId = searchParams.get('plan') as keyof typeof plans;
@@ -67,7 +87,9 @@ export default function CheckoutForm() {
       setPlanId(selectedPlanId);
       setPlan(plans[selectedPlanId]);
     } else {
-      router.push('/#pricing');
+      if (!searchParams.has('status')) { // Avoid redirecting if it's a verification redirect
+        router.push('/#pricing');
+      }
     }
   }, [searchParams, router]);
 
@@ -91,7 +113,7 @@ export default function CheckoutForm() {
       }
 
       setGst(gstAmount);
-      setTotal(finalTotal);
+      setTotal(parseFloat(finalTotal.toFixed(2)));
     }
   }, [plan, discount, isPay1Coupon, isFreeCoupon]);
 
@@ -142,12 +164,12 @@ export default function CheckoutForm() {
     }
   }, [couponCode, toast, form]);
 
-  const createOrder = async (amount: number) => {
+  const createOrder = async (amount: number, customer: {name: string, email: string}) => {
     try {
-        const response = await fetch('/api/create-order', {
+        const response = await fetch('/api/create-cashfree-order', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ amount: Math.round(amount * 100) }), // Amount in paise
+            body: JSON.stringify({ amount, customer }),
         });
 
         if (!response.ok) {
@@ -166,177 +188,61 @@ export default function CheckoutForm() {
         return null;
     }
   }
-
-  const verifyPayment = async (data: any) => {
-    try {
-      const response = await fetch('/api/payment-verification', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-      return await response.json();
-    } catch (error) {
-      console.error('Payment verification error:', error);
-      return { success: false, message: 'Could not verify payment.' };
-    }
-  };
-
-  const handleSuccessfulOrder = useCallback(async (
-    formData: FormValues,
-    paymentDetails: { orderId: string; paymentId: string }
-  ) => {
-    if (!plan) {
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'A processing error occurred. Please contact support.',
-      });
-      setIsLoading(false);
-      return;
-    }
-    
-    try {
-      let discountAmount = 0;
-      if (isFreeCoupon) {
-          discountAmount = plan.price;
-      } else if (isPay1Coupon) {
-          discountAmount = plan.price + (plan.price * GST_RATE) - 1;
-      } else {
-          discountAmount = plan.price * discount;
-      }
-
-      const newInvoiceData: InvoiceData = {
-        orderId: paymentDetails.orderId,
-        paymentId: paymentDetails.paymentId,
-        customer: {
-          name: formData.name,
-          email: formData.email,
-        },
-        plan: {
-          name: plan.name,
-          price: plan.price,
-        },
-        coupon: {
-          code: couponCode.toUpperCase(),
-          discount: discountAmount,
-          isPay1: isPay1Coupon,
-        },
-        gst,
-        total,
-      };
-
-      const pdfDataUri = await generateInvoice(newInvoiceData);
-      const invoiceNumber = paymentDetails.orderId.startsWith('FREE-') 
-        ? paymentDetails.orderId.slice(5, 13).toUpperCase() 
-        : paymentDetails.orderId.slice(-8).toUpperCase();
-      
-      setInvoiceUri(pdfDataUri);
-      setInvoiceFileName(`Invoice-${invoiceNumber}.pdf`);
-      
-      toast({
-        title: 'Payment Successful!',
-        description: 'Please download your invoice and proceed to the next step.',
-      });
-      
-      setPaymentSuccess(true);
-
-    } catch (error) {
-      console.error('Error in post-payment processing:', error);
-      toast({
-        variant: 'destructive',
-        title: 'Post-Payment Error',
-        description: 'Your payment was successful, but we failed to generate your invoice. Please contact support.',
-      });
-    } finally {
-        setIsLoading(false);
-    }
-  }, [plan, isFreeCoupon, isPay1Coupon, discount, couponCode, gst, total, toast]);
-
+  
+  const handleFreeOrder = (data: FormValues) => {
+    const orderId = `FREE-${Date.now()}`;
+    router.push(`/payment-success/${orderId}?status=success`);
+  }
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsLoading(true);
-  
+
     if (isFreeCoupon) {
-      await handleSuccessfulOrder(data, {
-        orderId: `FREE-${Date.now()}`,
-        paymentId: `FREE-${Date.now()}`,
-      });
+      handleFreeOrder(data);
       return;
     }
   
-    if (!plan || !RAZORPAY_KEY || !isRazorpayLoaded) {
+    if (!plan || !cashfree) {
       toast({ variant: 'destructive', title: 'Error', description: 'Payment gateway is not ready. Please try again in a moment.' });
       setIsLoading(false);
       return;
     }
-  
-    const order = await createOrder(total);
-    if (!order) {
+
+    const order = await createOrder(total, data);
+    if (!order || !order.payment_session_id) {
       setIsLoading(false);
       return;
     }
-  
-    const options = {
-      key: RAZORPAY_KEY,
-      amount: order.amount,
-      currency: order.currency,
-      name: 'Next Analytics',
-      description: `Payment for ${plan.name}`,
-      image: '/images/logo.png',
-      order_id: order.id,
-      handler: async (response: any) => {
-        setIsLoading(true);
-        const verificationData = {
-          razorpay_payment_id: response.razorpay_payment_id,
-          razorpay_order_id: response.razorpay_order_id,
-          razorpay_signature: response.razorpay_signature,
-        };
-  
-        const result = await verifyPayment(verificationData);
-  
-        if (result.success) {
-          await handleSuccessfulOrder(data, {
-            orderId: response.razorpay_order_id,
-            paymentId: response.razorpay_payment_id,
-          });
-        } else {
-          toast({
-            variant: 'destructive',
-            title: 'Payment Verification Failed',
-            description: result.message || 'Please contact support.',
-          });
-          setIsLoading(false);
-        }
-      },
-      prefill: {
-        name: data.name,
-        email: data.email,
-      },
-      notes: {
-        plan: planId,
-        coupon_applied: couponCode.toUpperCase(),
-      },
-      theme: {
-        color: '#008080',
-      },
-    };
+
+    const sessionId = order.payment_session_id;
     
-    const rzp = new window.Razorpay(options);
-    rzp.on('payment.failed', (response: any) => {
-        toast({
-            variant: 'destructive',
-            title: 'Payment Failed',
-            description: `Error: ${response.error.code} - ${response.error.description}`,
-        });
-        setIsLoading(false);
+    cashfree.checkout({
+      paymentSessionId: sessionId,
+      redirectTarget: '_self'
     });
-  
-    rzp.open();
   };
 
-  if (!plan) {
+  if (!plan && !searchParams.has('status')) {
     return <div className="text-center"><Loader2 className="mx-auto h-12 w-12 animate-spin" /></div>;
   }
+  
+  // A simple way to hide the form if a payment status is present, showing only the toast
+  if (searchParams.has('status')) {
+    return (
+        <div className="flex justify-center items-center h-64">
+            <Card className="w-full max-w-md">
+                <CardHeader>
+                    <CardTitle>Processing Payment</CardTitle>
+                </CardHeader>
+                <CardContent className="text-center">
+                    <p>Please wait while we verify your payment status...</p>
+                    <Loader2 className="mx-auto h-8 w-8 animate-spin mt-4" />
+                </CardContent>
+            </Card>
+        </div>
+    );
+  }
+
 
   const getButtonText = () => {
     if (isLoading) {
@@ -348,65 +254,8 @@ export default function CheckoutForm() {
     return <><CreditCard className="mr-2 h-4 w-4" /> Pay ₹{total.toFixed(2)}</>;
   };
 
-  if (paymentSuccess) {
-    return (
-        <Card>
-            <CardHeader className="text-center">
-                <CardTitle>Payment Successful!</CardTitle>
-                <CardDescription>Your order is complete. Please follow the steps below.</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <div className="text-center p-4 md:p-8 space-y-6">
-                    <CheckCircle className="mx-auto h-16 w-16 text-green-500 mb-4" />
-                    
-                    <div className="space-y-4 rounded-lg border bg-card p-4">
-                        <h3 className="text-lg font-semibold">Step 1: Download Your Invoice</h3>
-                         <Button asChild size="lg" onClick={() => setInvoiceDownloaded(true)}>
-                            <a href={invoiceUri!} download={invoiceFileName}>
-                                <Download className="mr-2 h-5 w-5" />
-                                Download Invoice
-                            </a>
-                        </Button>
-                        <div className="flex flex-col md:flex-row items-center justify-center gap-2 text-sm text-amber-500 p-3 bg-amber-500/10 rounded-md">
-                            <AlertCircle className="h-8 w-8 md:h-5 md:w-5 flex-shrink-0" />
-                            <div className="text-center md:text-left">
-                                <strong>Important:</strong> You MUST download and save this invoice.
-                                The Invoice Number is required to recover your data submission link if you lose it.
-                            </div>
-                        </div>
-                    </div>
-
-                     <div className="space-y-4 rounded-lg border bg-card p-4">
-                        <h3 className="text-lg font-semibold">Step 2: Upload Your Data</h3>
-                        <Button asChild size="lg" variant="secondary" disabled={!invoiceDownloaded}>
-                            <Link href="https://forms.gle/a8Yhowx9EutCwbcw7" target="_blank">
-                                <UploadCloud className="mr-2 h-5 w-5" />
-                                Proceed to Data Upload Form
-                            </Link>
-                        </Button>
-                        {!invoiceDownloaded && (
-                             <p className="text-sm text-muted-foreground">
-                                Please download your invoice in Step 1 to enable this button.
-                            </p>
-                        )}
-                        <p className="text-sm text-muted-foreground">
-                            Lost this link later? <Link href="/lost-form" className="underline">Recover it here</Link>.
-                        </p>
-                    </div>
-                </div>
-            </CardContent>
-        </Card>
-    );
-  }
-
   return (
     <>
-      <Script
-        id="razorpay-checkout-js"
-        src="https://checkout.razorpay.com/v1/checkout.js"
-        onLoad={() => setIsRazorpayLoaded(true)}
-      />
-
       <div className="grid gap-10 md:grid-cols-2">
         <Card>
           <CardHeader>
@@ -442,7 +291,7 @@ export default function CheckoutForm() {
                     </FormItem>
                   )}
                 />
-                <Button type="submit" className="w-full" disabled={isLoading || (!isRazorpayLoaded && !isFreeCoupon)}>
+                <Button type="submit" className="w-full" disabled={isLoading || (!cashfree && !isFreeCoupon)}>
                   {getButtonText()}
                 </Button>
               </form>
@@ -457,26 +306,26 @@ export default function CheckoutForm() {
             </CardHeader>
             <CardContent className="space-y-4">
                 <div className="flex justify-between">
-                <span>{plan.name}</span>
-                <span>₹{plan.price.toFixed(2)}</span>
+                <span>{plan?.name || 'Loading...'}</span>
+                <span>₹{plan?.price.toFixed(2) || '0.00'}</span>
                 </div>
                 
                 {isFreeCoupon ? (
                   <div className="flex justify-between text-green-500">
                     <span>100% Discount ("25072005")</span>
-                    <span>-₹{plan.price.toFixed(2)}</span>
+                    <span>-₹{plan?.price.toFixed(2)}</span>
                   </div>
                 ) : isPay1Coupon ? (
                   <div className="flex justify-between text-green-500">
                       <span>PAY1 Coupon</span>
-                      <span>-₹{(plan.price * (1+GST_RATE) - 1).toFixed(2)}</span>
+                      <span>-₹{(plan ? (plan.price * (1+GST_RATE) - 1) : 0).toFixed(2)}</span>
                   </div>
                 ) : (
                   <>
                     {discount > 0 && (
                       <div className="flex justify-between text-green-500">
                         <span>Discount ({(discount * 100).toFixed(0)}%)</span>
-                        <span>-₹{(plan.price * discount).toFixed(2)}</span>
+                        <span>-₹{(plan ? (plan.price * discount) : 0).toFixed(2)}</span>
                       </div>
                     )}
                   </>
@@ -513,4 +362,12 @@ export default function CheckoutForm() {
       </div>
     </>
   );
+}
+
+export default function CheckoutForm() {
+    return (
+        <Suspense fallback={<div className="text-center"><Loader2 className="mx-auto h-12 w-12 animate-spin" /></div>}>
+            <CheckoutFormComponent />
+        </Suspense>
+    );
 }
