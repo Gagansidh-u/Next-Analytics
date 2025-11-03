@@ -1,14 +1,11 @@
 // /app/api/create-cashfree-order/route.ts
 import { NextResponse } from 'next/server';
-import { config } from 'dotenv';
-
-config();
 
 export async function POST(request: Request) {
   const { amount, customer } = await request.json();
   const order_id = `order_${Date.now()}`;
 
-  if (!process.env.NEXT_PUBLIC_CASHFREE_APP_ID || !process.env.CASHFREE_SECRET_KEY) {
+  if (!process.env.CASHFREE_APP_ID || !process.env.CASHFREE_SECRET_KEY) {
     return NextResponse.json({ error: 'Cashfree API keys not configured.' }, { status: 500 });
   }
 
@@ -18,7 +15,7 @@ export async function POST(request: Request) {
     headers: {
       'Content-Type': 'application/json',
       'x-api-version': '2023-08-01',
-      'x-client-id': process.env.NEXT_PUBLIC_CASHFREE_APP_ID,
+      'x-client-id': process.env.CASHFREE_APP_ID,
       'x-client-secret': process.env.CASHFREE_SECRET_KEY,
     },
     body: JSON.stringify({

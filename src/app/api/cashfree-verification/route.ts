@@ -1,8 +1,5 @@
 // /app/api/cashfree-verification/route.ts
 import { NextResponse } from 'next/server';
-import { config } from 'dotenv';
-
-config();
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -12,7 +9,7 @@ export async function GET(request: Request) {
     return NextResponse.redirect(new URL('/checkout?status=failed', request.url));
   }
 
-  if (!process.env.NEXT_PUBLIC_CASHFREE_APP_ID || !process.env.CASHFREE_SECRET_KEY) {
+  if (!process.env.CASHFREE_APP_ID || !process.env.CASHFREE_SECRET_KEY) {
     return NextResponse.json({ error: 'Cashfree API keys not configured.' }, { status: 500 });
   }
 
@@ -22,7 +19,7 @@ export async function GET(request: Request) {
     headers: {
       'Content-Type': 'application/json',
       'x-api-version': '2023-08-01',
-      'x-client-id': process.env.NEXT_PUBLIC_CASHFREE_APP_ID,
+      'x-client-id': process.env.CASHFREE_APP_ID,
       'x-client-secret': process.env.CASHFREE_SECRET_KEY,
     },
   };
