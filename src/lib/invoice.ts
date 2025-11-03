@@ -36,7 +36,8 @@ function loadImage(url: string): Promise<HTMLImageElement> {
 }
 
 
-export async function generateInvoice(data: InvoiceData): Promise<string> {
+export async function generateInvoice(data: InvoiceData) {
+  /*
   const doc = new jsPDF();
   const date = new Date();
   const formattedDate = format(date, 'MMM dd, yyyy');
@@ -148,7 +149,7 @@ export async function generateInvoice(data: InvoiceData): Promise<string> {
   if (data.gst > 0) {
     doc.setFont('helvetica', 'bold');
     doc.text('GST (18%):', 130, yPos);
-    doc.setFont('helvetica', 'normal');
+    docsetFont('helvetica', 'normal');
     doc.text(`Rs. ${data.gst.toFixed(2)}`, 190, yPos, { align: 'right' });
     yPos += 7;
   }
@@ -163,6 +164,8 @@ export async function generateInvoice(data: InvoiceData): Promise<string> {
   doc.text('Thank you for your business!', 14, doc.internal.pageSize.height - 20);
   doc.text('This is System Generated Invoice and does not require a signature', 105, doc.internal.pageSize.height - 10, { align: 'center' });
 
-  // Return the PDF as a data URI
-  return doc.output('datauristring');
+  doc.save(`Invoice-${invoiceNumber}.pdf`);
+  */
 }
+
+    

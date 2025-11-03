@@ -1,4 +1,4 @@
-// @/components/checkout-form.tsx
+
 'use client';
 
 import { useState, useEffect, useCallback, Suspense } from 'react';
@@ -7,7 +7,7 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
@@ -126,7 +126,7 @@ function CheckoutFormComponent() {
     const upperCaseCoupon = couponCode.toUpperCase();
     form.setValue('coupon', upperCaseCoupon);
 
-    if (upperCaseCoupon === 'OFFNEXT15') {
+    if (upperCaseCoupon === 'NEXTOFF15') {
       setDiscount(0.15);
       setIsPay1Coupon(false);
       setIsFreeCoupon(false);
@@ -201,6 +201,27 @@ function CheckoutFormComponent() {
       handleFreeOrder(data);
       return;
     }
+
+    const appliedCoupon = form.getValues('coupon')?.toUpperCase();
+    if(appliedCoupon === 'NEXTOFF15') {
+      if (planId === 'basic') {
+        window.location.href = 'https://rzp.io/rzp/25072';
+        return;
+      }
+      if (planId === 'professional') {
+        window.location.href = 'https://rzp.io/rzp/25074';
+        return;
+      }
+    }
+
+    if (planId === 'basic') {
+      window.location.href = 'https://rzp.io/rzp/25071';
+      return;
+    }
+    if (planId === 'professional') {
+      window.location.href = 'https://rzp.io/rzp/25073';
+      return;
+    }
   
     if (!plan || !cashfree) {
       toast({ variant: 'destructive', title: 'Error', description: 'Payment gateway is not ready. Please try again in a moment.' });
@@ -226,7 +247,6 @@ function CheckoutFormComponent() {
     return <div className="text-center"><Loader2 className="mx-auto h-12 w-12 animate-spin" /></div>;
   }
   
-  // A simple way to hide the form if a payment status is present, showing only the toast
   if (searchParams.has('status')) {
     return (
         <div className="flex justify-center items-center h-64">
@@ -243,13 +263,15 @@ function CheckoutFormComponent() {
     );
   }
 
-
   const getButtonText = () => {
     if (isLoading) {
       return <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Processing...</>;
     }
     if (isFreeCoupon) {
       return 'Get for Free';
+    }
+    if (planId === 'basic' || planId === 'professional') {
+        return <><CreditCard className="mr-2 h-4 w-4" /> Proceed to Pay</>;
     }
     return <><CreditCard className="mr-2 h-4 w-4" /> Pay ₹{total.toFixed(2)}</>;
   };
@@ -330,13 +352,18 @@ function CheckoutFormComponent() {
                     )}
                   </>
                 )}
-                 {!isFreeCoupon && !isPay1Coupon && (
-                    <div className="flex justify-between">
-                        <span>GST (18%)</span>
-                        <span>+₹{gst.toFixed(2)}</span>
-                    </div>
-                )}
-                <div className="border-t pt-4 flex justify-between font-bold text-lg">
+                
+                <div className="flex justify-between">
+                <span>Subtotal</span>
+                <span>₹{(total / (1 + GST_RATE)).toFixed(2)}</span>
+                </div>
+                
+                <div className="flex justify-between">
+                <span>GST (18%+)</span>
+                <span>₹{gst.toFixed(2)}</span>
+                </div>
+                
+                <div className="flex justify-between text-lg font-bold">
                 <span>Total</span>
                 <span>₹{total.toFixed(2)}</span>
                 </div>
@@ -345,16 +372,20 @@ function CheckoutFormComponent() {
 
             <Card>
                 <CardHeader>
-                    <CardTitle>Have a coupon?</CardTitle>
+                    <CardTitle className="flex items-center gap-2">
+                        <Ticket />
+                        Have a Coupon?
+                    </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div className="flex space-x-2">
+                    <div className="flex gap-2">
                         <Input 
-                            placeholder="Enter coupon code" 
-                            value={couponCode} 
+                            value={couponCode}
                             onChange={(e) => setCouponCode(e.target.value)}
+                            placeholder="Enter coupon code"
+                            className="flex-1"
                         />
-                        <Button onClick={applyCoupon}><Ticket className="mr-2 h-4 w-4" /> Apply</Button>
+                        <Button onClick={applyCoupon}>Apply</Button>
                     </div>
                 </CardContent>
             </Card>
