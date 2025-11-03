@@ -6,7 +6,8 @@ export async function POST(request: Request) {
   const order_id = `order_${Date.now()}`;
 
   if (!process.env.CASHFREE_APP_ID || !process.env.CASHFREE_SECRET_KEY) {
-    return NextResponse.json({ error: 'Cashfree API keys not configured.' }, { status: 500 });
+    console.error('Cashfree API keys not configured on the server.');
+    return NextResponse.json({ error: 'Server payment configuration error.' }, { status: 500 });
   }
 
   const url = 'https://api.cashfree.com/pg/orders';
@@ -29,7 +30,7 @@ export async function POST(request: Request) {
         customer_name: customer.name,
       },
       order_meta: {
-        return_url: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:9002'}/api/cashfree-verification?order_id={order_id}`,
+        return_url: `${process.env.NEXT_PUBLIC_SITE_URL}/api/cashfree-verification?order_id={order_id}`,
       },
     }),
   };
@@ -45,7 +46,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: data.message || 'Could not create Cashfree order.' }, { status: response.status });
     }
   } catch (error) {
-    console.error(error);
-    return NextResponse.json({ error: 'Could not create Cashfree order.' }, { status: 500 });
+    console.error('Exception creating Cashfree order:', error);
+    return NextResponse.json({ error: 'Could not create Cashfree order due to a server error.' }, { status: 500 });
   }
 }

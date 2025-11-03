@@ -11,7 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Ticket, CreditCard, AlertTriangle } from 'lucide-react';
+import { Loader2, Ticket, CreditCard } from 'lucide-react';
 import { load, Cashfree } from '@cashfreepayments/cashfree-js';
 
 const plans = {
@@ -318,7 +318,7 @@ function CheckoutFormComponent() {
                 ) : isPay1Coupon ? (
                   <div className="flex justify-between text-green-500">
                       <span>PAY1 Coupon</span>
-                      <span>-₹{(plan ? (plan.price * (1+GST_RATE) - 1) : 0).toFixed(2)}</span>
+                      <span>-₹{(plan ? (plan.price * (1+GST_RATE) - 1) / (1+GST_RATE) : 0).toFixed(2)}</span>
                   </div>
                 ) : (
                   <>

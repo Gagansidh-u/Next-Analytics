@@ -6,12 +6,12 @@ export async function GET(request: Request) {
   const orderId = searchParams.get('order_id');
 
   if (!orderId) {
-    return NextResponse.redirect(new URL('/checkout?status=failed', request.url));
+    return NextResponse.redirect(new URL('/checkout?status=failed&reason=no_order_id', request.url));
   }
 
   if (!process.env.CASHFREE_APP_ID || !process.env.CASHFREE_SECRET_KEY) {
     console.error('Cashfree API keys not configured on the server.');
-    return NextResponse.json({ error: 'Cashfree API keys not configured.' }, { status: 500 });
+    return NextResponse.redirect(new URL('/checkout?status=error&reason=server_config_error', request.url));
   }
 
   const url = `https://api.cashfree.com/pg/orders/${orderId}`;
@@ -39,13 +39,14 @@ export async function GET(request: Request) {
       // Redirect to a failure page
        const failureUrl = new URL(`/checkout`, request.url);
        failureUrl.searchParams.set('status', 'failed');
-       failureUrl.searchParams.set('reason', data.order_status);
+       failureUrl.searchParams.set('reason', data.order_status || 'payment_not_paid');
        return NextResponse.redirect(failureUrl);
     }
   } catch (error) {
     console.error('Cashfree verification error:', error);
     const failureUrl = new URL(`/checkout`, request.url);
     failureUrl.searchParams.set('status', 'error');
+    failureUrl.searchParams.set('reason', 'verification_failed');
     return NextResponse.redirect(failureUrl);
   }
 }
