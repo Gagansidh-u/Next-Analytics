@@ -8,9 +8,10 @@ import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle, UploadCloud, ArrowLeft } from 'lucide-react';
+import { CheckCircle, UploadCloud, ArrowLeft, Download } from 'lucide-react';
 import { useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { generateInvoice, InvoiceData } from '@/lib/invoice';
 
 function SuccessPageContent() {
     const params = useParams();
@@ -29,6 +30,37 @@ function SuccessPageContent() {
         }
     }, [status, toast]);
     
+    const handleDownloadInvoice = () => {
+        const customerName = searchParams.get('name') || 'Customer';
+        const customerEmail = searchParams.get('email') || 'N/A';
+        const planName = searchParams.get('planName') || 'Analytics Plan';
+        const total = parseFloat(searchParams.get('total') || '0');
+        const paymentId = searchParams.get('paymentId') || 'N/A';
+
+        const planPrice = total / 1.18; // Reverse calculate price before GST
+        const gst = total - planPrice;
+
+        const invoiceData: InvoiceData = {
+            orderId: orderId,
+            paymentId: paymentId,
+            customer: {
+                name: customerName,
+                email: customerEmail,
+            },
+            plan: {
+                name: planName,
+                price: planPrice, // This is an approximation
+            },
+            coupon: {
+                discount: 0, // Simplified for now, can be enhanced later
+                isPay1: false,
+            },
+            gst: gst,
+            total: total,
+        };
+
+        generateInvoice(invoiceData);
+    };
 
     return (
         <div className="flex min-h-screen flex-col">
@@ -47,6 +79,14 @@ function SuccessPageContent() {
                                 <div className="p-4 bg-card rounded-lg border">
                                     <p className="text-muted-foreground">Your Order ID:</p>
                                     <p className="font-mono text-sm break-all">{orderId}</p>
+                                </div>
+
+                                <div className="space-y-4 rounded-lg border bg-card p-4">
+                                    <h3 className="text-lg font-semibold">Download Your Invoice</h3>
+                                    <Button onClick={handleDownloadInvoice} size="lg">
+                                        <Download className="mr-2 h-5 w-5" />
+                                        Download Invoice
+                                    </Button>
                                 </div>
 
                                 <div className="space-y-4 rounded-lg border bg-card p-4">
