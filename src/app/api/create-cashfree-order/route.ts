@@ -26,7 +26,7 @@ export async function POST(request: Request) {
       customer_details: {
         customer_id: `customer_${Date.now()}`,
         customer_email: customer.email,
-        customer_phone: '9999999999', // Cashfree requires a phone number
+        customer_phone: customer.phone,
         customer_name: customer.name,
       },
       order_meta: {

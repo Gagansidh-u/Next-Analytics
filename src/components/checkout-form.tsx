@@ -11,7 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Ticket, CreditCard } from 'lucide-react';
+import { Loader2, Ticket, CreditCard, Phone } from 'lucide-react';
 import { load, Cashfree } from '@cashfreepayments/cashfree-js';
 
 const plans = {
@@ -23,6 +23,7 @@ const plans = {
 const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
   email: z.string().email({ message: 'Please enter a valid email address.' }),
+  phone: z.string().regex(/^\d{10}$/, { message: 'Please enter a valid 10-digit mobile number.' }),
   coupon: z.string().optional(),
 });
 
@@ -121,7 +122,7 @@ function CheckoutFormComponent() {
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: { name: '', email: '', coupon: '' },
+    defaultValues: { name: '', email: '', phone: '', coupon: '' },
   });
 
   const applyCoupon = useCallback(() => {
@@ -166,7 +167,7 @@ function CheckoutFormComponent() {
     }
   }, [couponCode, toast, form]);
 
-  const createOrder = async (amount: number, customer: {name: string, email: string}) => {
+  const createOrder = async (amount: number, customer: {name: string, email: string, phone: string}) => {
     try {
         const response = await fetch('/api/create-cashfree-order', {
             method: 'POST',
@@ -286,6 +287,22 @@ function CheckoutFormComponent() {
                       <FormLabel>Email Address</FormLabel>
                       <FormControl>
                         <Input placeholder="you@example.com" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                 <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Mobile Number</FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                           <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                           <Input type="tel" placeholder="9999988888" {...field} className="pl-10" />
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
