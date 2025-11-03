@@ -190,8 +190,8 @@ function CheckoutFormComponent() {
   }
   
   const handleFreeOrder = (data: FormValues) => {
-    const orderId = `FREE-${Date.now()}`;
-    router.push(`/payment-success/${orderId}?status=success`);
+    const successId = 'Nextaz771941228675280AsDfGhJkLzXcVbNm';
+    router.push(`/${successId}?name=${encodeURIComponent(data.name)}`);
   }
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
@@ -199,27 +199,6 @@ function CheckoutFormComponent() {
 
     if (isFreeCoupon) {
       handleFreeOrder(data);
-      return;
-    }
-
-    const appliedCoupon = form.getValues('coupon')?.toUpperCase();
-    if(appliedCoupon === 'NEXTOFF15') {
-      if (planId === 'basic') {
-        window.location.href = 'https://rzp.io/rzp/25072';
-        return;
-      }
-      if (planId === 'professional') {
-        window.location.href = 'https://rzp.io/rzp/25074';
-        return;
-      }
-    }
-
-    if (planId === 'basic') {
-      window.location.href = 'https://rzp.io/rzp/25071';
-      return;
-    }
-    if (planId === 'professional') {
-      window.location.href = 'https://rzp.io/rzp/25073';
       return;
     }
   
@@ -269,9 +248,6 @@ function CheckoutFormComponent() {
     }
     if (isFreeCoupon) {
       return 'Get for Free';
-    }
-    if (planId === 'basic' || planId === 'professional') {
-        return <><CreditCard className="mr-2 h-4 w-4" /> Proceed to Pay</>;
     }
     return <><CreditCard className="mr-2 h-4 w-4" /> Pay ₹{total.toFixed(2)}</>;
   };
@@ -359,7 +335,7 @@ function CheckoutFormComponent() {
                 </div>
                 
                 <div className="flex justify-between">
-                <span>GST (18%+)</span>
+                <span>GST (18%)</span>
                 <span>₹{gst.toFixed(2)}</span>
                 </div>
                 
@@ -402,3 +378,5 @@ export default function CheckoutForm() {
         </Suspense>
     );
 }
+
+    
