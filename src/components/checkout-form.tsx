@@ -45,6 +45,7 @@ function CheckoutFormComponent() {
   const [couponCode, setCouponCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [cashfree, setCashfree] = useState<Cashfree | null>(null);
+  const [isCashfreeReady, setIsCashfreeReady] = useState(false);
 
    useEffect(() => {
     const status = searchParams.get('status');
@@ -69,6 +70,7 @@ function CheckoutFormComponent() {
       try {
         const cfInstance = await load({ mode: 'production' });
         setCashfree(cfInstance);
+        setIsCashfreeReady(true);
       } catch (error) {
         console.error('Failed to initialize Cashfree:', error);
         toast({
@@ -289,7 +291,7 @@ function CheckoutFormComponent() {
                     </FormItem>
                   )}
                 />
-                <Button type="submit" className="w-full" disabled={isLoading || (!cashfree && !isFreeCoupon)}>
+                <Button type="submit" className="w-full" disabled={isLoading || (!isCashfreeReady && !isFreeCoupon)}>
                   {getButtonText()}
                 </Button>
               </form>
@@ -378,5 +380,3 @@ export default function CheckoutForm() {
         </Suspense>
     );
 }
-
-    

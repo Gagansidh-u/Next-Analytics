@@ -10,6 +10,7 @@ export async function GET(request: Request) {
   }
 
   if (!process.env.CASHFREE_APP_ID || !process.env.CASHFREE_SECRET_KEY) {
+    console.error('Cashfree API keys not configured on the server.');
     return NextResponse.json({ error: 'Cashfree API keys not configured.' }, { status: 500 });
   }
 
