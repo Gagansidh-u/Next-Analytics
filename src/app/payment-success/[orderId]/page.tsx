@@ -1,14 +1,14 @@
 // src/app/payment-success/[orderId]/page.tsx
 'use client';
 
-import { Suspense } from 'react';
+import { Suspense, useState } from 'react';
 import Link from 'next/link';
 import { useParams, useSearchParams } from 'next/navigation';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle, UploadCloud, ArrowLeft, Download } from 'lucide-react';
+import { CheckCircle, UploadCloud, ArrowLeft, Download, Lock, Unlock } from 'lucide-react';
 import { useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { generateInvoice, InvoiceData } from '@/lib/invoice';
@@ -17,6 +17,7 @@ function SuccessPageContent() {
     const params = useParams();
     const searchParams = useSearchParams();
     const { toast } = useToast();
+    const [isInvoiceDownloaded, setIsInvoiceDownloaded] = useState(false);
 
     const orderId = Array.isArray(params.orderId) ? params.orderId[0] : params.orderId;
     const status = searchParams.get('status');
@@ -60,6 +61,11 @@ function SuccessPageContent() {
         };
 
         generateInvoice(invoiceData);
+        setIsInvoiceDownloaded(true);
+        toast({
+            title: "Invoice Downloaded",
+            description: "You can now proceed to upload your data.",
+        });
     };
 
     return (
@@ -82,7 +88,7 @@ function SuccessPageContent() {
                                 </div>
 
                                 <div className="space-y-4 rounded-lg border bg-card p-4">
-                                    <h3 className="text-lg font-semibold">Download Your Invoice</h3>
+                                    <h3 className="text-lg font-semibold">Step 1: Download Your Invoice (Required)</h3>
                                     <Button onClick={handleDownloadInvoice} size="lg">
                                         <Download className="mr-2 h-5 w-5" />
                                         Download Invoice
@@ -90,13 +96,18 @@ function SuccessPageContent() {
                                 </div>
 
                                 <div className="space-y-4 rounded-lg border bg-card p-4">
-                                    <h3 className="text-lg font-semibold">Next Step: Upload Your Data</h3>
-                                    <Button asChild size="lg" variant="secondary">
+                                    <h3 className="text-lg font-semibold">Step 2: Upload Your Data</h3>
+                                    <Button asChild size="lg" variant="secondary" disabled={!isInvoiceDownloaded}>
                                         <Link href="https://forms.gle/a8Yhowx9EutCwbcw7" target="_blank">
-                                            <UploadCloud className="mr-2 h-5 w-5" />
+                                            {isInvoiceDownloaded ? <Unlock className="mr-2 h-5 w-5" /> : <Lock className="mr-2 h-5 w-5" />}
                                             Proceed to Data Upload Form
                                         </Link>
                                     </Button>
+                                    {!isInvoiceDownloaded && (
+                                        <p className="text-sm text-muted-foreground">
+                                           Please download your invoice to unlock this step.
+                                        </p>
+                                    )}
                                     <p className="text-sm text-muted-foreground">
                                         Lost this link later? <Link href="/lost-form" className="underline">Recover it here</Link>.
                                     </p>
