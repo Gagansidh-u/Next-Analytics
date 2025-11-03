@@ -1,5 +1,8 @@
 // /app/api/create-cashfree-order/route.ts
 import { NextResponse } from 'next/server';
+import { config } from 'dotenv';
+
+config();
 
 export async function POST(request: Request) {
   const { amount, customer } = await request.json();

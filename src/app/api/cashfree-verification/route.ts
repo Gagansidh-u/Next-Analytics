@@ -1,5 +1,8 @@
 // /app/api/cashfree-verification/route.ts
 import { NextResponse } from 'next/server';
+import { config } from 'dotenv';
+
+config();
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
