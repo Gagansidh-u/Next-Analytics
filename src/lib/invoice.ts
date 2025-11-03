@@ -37,7 +37,6 @@ function loadImage(url: string): Promise<HTMLImageElement> {
 
 
 export async function generateInvoice(data: InvoiceData) {
-  /*
   const doc = new jsPDF();
   const date = new Date();
   const formattedDate = format(date, 'MMM dd, yyyy');
@@ -149,7 +148,7 @@ export async function generateInvoice(data: InvoiceData) {
   if (data.gst > 0) {
     doc.setFont('helvetica', 'bold');
     doc.text('GST (18%):', 130, yPos);
-    docsetFont('helvetica', 'normal');
+    doc.setFont('helvetica', 'normal');
     doc.text(`Rs. ${data.gst.toFixed(2)}`, 190, yPos, { align: 'right' });
     yPos += 7;
   }
@@ -165,7 +164,4 @@ export async function generateInvoice(data: InvoiceData) {
   doc.text('This is System Generated Invoice and does not require a signature', 105, doc.internal.pageSize.height - 10, { align: 'center' });
 
   doc.save(`Invoice-${invoiceNumber}.pdf`);
-  */
 }
-
-    
