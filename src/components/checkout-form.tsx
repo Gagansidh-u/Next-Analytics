@@ -196,7 +196,13 @@ function CheckoutFormComponent() {
   
   const handleFreeOrder = (data: FormValues) => {
     const successId = 'Nextaz771941228675280AsDfGhJkLzXcVbNm';
-    router.push(`/${successId}?name=${encodeURIComponent(data.name)}`);
+    const queryParams = new URLSearchParams({
+      name: data.name,
+      email: data.email,
+      plan: plan?.name || 'Basic Plan',
+      price: String(plan?.price || 5000),
+    });
+    router.push(`/${successId}?${queryParams.toString()}`);
   }
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
