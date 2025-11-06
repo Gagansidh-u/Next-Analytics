@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server';
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const orderId = searchParams.get('order_id');
+  const coupon = searchParams.get('coupon');
 
   if (!orderId) {
     return NextResponse.redirect(new URL('/checkout?status=failed&reason=no_order_id', process.env.NEXT_PUBLIC_SITE_URL));
@@ -38,6 +39,9 @@ export async function GET(request: Request) {
       successUrl.searchParams.set('planName', 'Your Plan'); // You may need a better way to get this
       successUrl.searchParams.set('total', data.order_amount);
       successUrl.searchParams.set('paymentId', data.cf_order_id);
+      if (coupon) {
+        successUrl.searchParams.set('coupon', coupon);
+      }
       
       return NextResponse.redirect(successUrl);
 

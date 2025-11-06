@@ -69,7 +69,9 @@ function CheckoutFormComponent() {
   useEffect(() => {
     const initializeCashfree = async () => {
       try {
-        const cfInstance = await load({ mode: 'production' });
+        const cfInstance = await load({ 
+          mode: 'production',
+        });
         setCashfree(cfInstance);
         setIsCashfreeReady(true);
       } catch (error) {
@@ -167,12 +169,12 @@ function CheckoutFormComponent() {
     }
   }, [couponCode, toast, form]);
 
-  const createOrder = async (amount: number, customer: {name: string, email: string, phone: string}) => {
+  const createOrder = async (amount: number, customer: {name: string, email: string, phone: string}, coupon?: string) => {
     try {
         const response = await fetch('/api/create-cashfree-order', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ amount, customer }),
+            body: JSON.stringify({ amount, customer, coupon }),
         });
 
         if (!response.ok) {
@@ -211,7 +213,9 @@ function CheckoutFormComponent() {
       return;
     }
 
-    const order = await createOrder(total, data);
+    const appliedCoupon = form.getValues('coupon');
+    const order = await createOrder(total, data, appliedCoupon);
+
     if (!order || !order.payment_session_id) {
       setIsLoading(false);
       return;

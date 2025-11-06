@@ -2,7 +2,7 @@
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
-  const { amount, customer } = await request.json();
+  const { amount, customer, coupon } = await request.json();
   const order_id = `order_${Date.now()}`;
 
   if (!process.env.CASHFREE_APP_ID || !process.env.CASHFREE_SECRET_KEY) {
@@ -11,6 +11,11 @@ export async function POST(request: Request) {
   }
 
   const url = 'https://api.cashfree.com/pg/orders';
+  let returnUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/api/cashfree-verification?order_id={order_id}`;
+  if (coupon) {
+    returnUrl += `&coupon=${coupon}`;
+  }
+
   const options = {
     method: 'POST',
     headers: {
@@ -30,7 +35,7 @@ export async function POST(request: Request) {
         customer_name: customer.name,
       },
       order_meta: {
-        return_url: `${process.env.NEXT_PUBLIC_SITE_URL}/api/cashfree-verification?order_id={order_id}`,
+        return_url: returnUrl,
       },
     }),
   };

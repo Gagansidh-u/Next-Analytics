@@ -105,9 +105,7 @@ export async function generateInvoice(data: InvoiceData) {
     `Rs. ${data.plan.price.toFixed(2)}`,
     data.coupon.code === '25072005' 
       ? '100% OFF' 
-      : (data.coupon.isPay1 
-          ? 'PAY1 Coupon' 
-          : `Rs. ${data.coupon.discount.toFixed(2)}`),
+      : `Rs. ${data.coupon.discount.toFixed(2)}`,
     `Rs. ${subtotalBeforeGst.toFixed(2)}`
   ];
   tableRows.push(row);

@@ -13,6 +13,13 @@ import { useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { generateInvoice, InvoiceData } from '@/lib/invoice';
 
+const plans = {
+  basic: { name: 'Basic Plan', price: 5000 },
+  professional: { name: 'Professional Plan', price: 12000 },
+};
+
+const GST_RATE = 0.18;
+
 function SuccessPageContent() {
     const params = useParams();
     const searchParams = useSearchParams();
@@ -37,9 +44,28 @@ function SuccessPageContent() {
         const planName = searchParams.get('planName') || 'Analytics Plan';
         const total = parseFloat(searchParams.get('total') || '0');
         const paymentId = searchParams.get('paymentId') || 'N/A';
+        const couponCode = searchParams.get('coupon')?.toUpperCase();
 
-        const planPrice = total / 1.18; // Reverse calculate price before GST
+        const planPrice = total / (1 + GST_RATE);
         const gst = total - planPrice;
+        
+        let planDetails;
+        if(planName.toLowerCase().includes('basic')) planDetails = plans.basic;
+        else if (planName.toLowerCase().includes('professional')) planDetails = plans.professional;
+        else planDetails = {name: planName, price: total / (1+GST_RATE) };
+        
+        let discount = 0;
+        let isPay1 = false;
+        
+        if (couponCode === 'NEXTOFF15' && planDetails.price) {
+            discount = planDetails.price * 0.15;
+        } else if (couponCode === 'PAY1') {
+            isPay1 = true;
+            if(planDetails.price){
+              discount = planDetails.price - (1 / (1 + GST_RATE));
+            }
+        }
+
 
         const invoiceData: InvoiceData = {
             orderId: orderId,
@@ -49,12 +75,13 @@ function SuccessPageContent() {
                 email: customerEmail,
             },
             plan: {
-                name: planName,
-                price: planPrice, // This is an approximation
+                name: planDetails.name,
+                price: planDetails.price,
             },
             coupon: {
-                discount: 0, // Simplified for now, can be enhanced later
-                isPay1: false,
+                code: couponCode,
+                discount: discount,
+                isPay1: isPay1
             },
             gst: gst,
             total: total,
