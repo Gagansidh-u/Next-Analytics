@@ -8,7 +8,7 @@ import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle, UploadCloud, ArrowLeft, Download, Lock, Unlock } from 'lucide-react';
+import { CheckCircle, ArrowLeft, Download, Lock, Unlock } from 'lucide-react';
 import { useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { generateInvoice, InvoiceData } from '@/lib/invoice';
@@ -94,6 +94,12 @@ function SuccessPageContent() {
             description: "You can now proceed to upload your data.",
         });
     };
+    
+    const handleProceedToUpload = () => {
+        if (isInvoiceDownloaded) {
+            window.open('https://forms.gle/a8Yhowx9EutCwbcw7', '_blank');
+        }
+    };
 
     return (
         <div className="flex min-h-screen flex-col">
@@ -124,18 +130,16 @@ function SuccessPageContent() {
 
                                 <div className="space-y-4 rounded-lg border bg-card p-4">
                                     <h3 className="text-lg font-semibold">Step 2: Upload Your Data</h3>
-                                    <Button asChild size="lg" variant="secondary" disabled={!isInvoiceDownloaded}>
-                                        <Link href="https://forms.gle/a8Yhowx9EutCwbcw7" target="_blank">
-                                            {isInvoiceDownloaded ? <Unlock className="mr-2 h-5 w-5" /> : <Lock className="mr-2 h-5 w-5" />}
-                                            Proceed to Data Upload Form
-                                        </Link>
+                                    <Button onClick={handleProceedToUpload} size="lg" variant="secondary" disabled={!isInvoiceDownloaded}>
+                                        {isInvoiceDownloaded ? <Unlock className="mr-2 h-5 w-5" /> : <Lock className="mr-2 h-5 w-5" />}
+                                        Proceed to Data Upload Form
                                     </Button>
                                     {!isInvoiceDownloaded && (
                                         <p className="text-sm text-muted-foreground">
                                            Please download your invoice to unlock this step.
                                         </p>
                                     )}
-                                    <p className="text-sm text-muted-foreground">
+                                    <p className="text-sm text-muted-foreground pt-2">
                                         Lost this link later? <Link href="/lost-form" className="underline">Recover it here</Link>.
                                     </p>
                                 </div>
