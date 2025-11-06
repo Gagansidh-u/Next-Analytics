@@ -103,8 +103,8 @@ export async function generateInvoice(data: InvoiceData) {
   const row = [
     data.plan.name,
     `Rs. ${data.plan.price.toFixed(2)}`,
-    data.coupon.code === '25072005' 
-      ? '100% OFF' 
+     data.coupon.code === '25072005' || data.coupon.discount === data.plan.price
+      ? '100% OFF'
       : `Rs. ${data.coupon.discount.toFixed(2)}`,
     `Rs. ${subtotalBeforeGst.toFixed(2)}`
   ];
@@ -131,30 +131,38 @@ export async function generateInvoice(data: InvoiceData) {
     }
   });
 
-  // Totals
+  // Totals using a borderless table for alignment
   const finalY = (doc as any).lastAutoTable.finalY;
-  doc.setFontSize(10);
-
-  let yPos = finalY + 10;
+  const totalsRows = [];
+  totalsRows.push(['Subtotal:', `Rs. ${subtotalBeforeGst.toFixed(2)}`]);
   
-  doc.setFont('helvetica', 'bold');
-  doc.text('Subtotal:', 130, yPos);
-  doc.setFont('helvetica', 'normal');
-  doc.text(`Rs. ${subtotalBeforeGst.toFixed(2)}`, 190, yPos, { align: 'right' });
-  yPos += 7;
-
   if (data.gst > 0) {
-    doc.setFont('helvetica', 'bold');
-    doc.text('GST (18%):', 130, yPos);
-    doc.setFont('helvetica', 'normal');
-    doc.text(`Rs. ${data.gst.toFixed(2)}`, 190, yPos, { align: 'right' });
-    yPos += 7;
+    totalsRows.push(['GST (18%):', `Rs. ${data.gst.toFixed(2)}`]);
   }
   
-  doc.setFontSize(12);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Total:', 130, yPos);
-  doc.text(`Rs. ${data.total.toFixed(2)}`, 190, yPos, { align: 'right' });
+  totalsRows.push([{ content: 'Total:', styles: { fontStyle: 'bold' } }, { content: `Rs. ${data.total.toFixed(2)}`, styles: { fontStyle: 'bold' } }]);
+
+  (doc as any).autoTable({
+    startY: finalY + 8,
+    body: totalsRows,
+    theme: 'plain',
+    tableWidth: 'wrap',
+    margin: { left: 130 },
+    styles: {
+      font: 'helvetica',
+      fontSize: 10,
+    },
+    columnStyles: {
+      0: { fontStyle: 'bold', halign: 'right' },
+      1: { halign: 'right' },
+    },
+    didParseCell: function (data: any) {
+        if (data.row.index === totalsRows.length - 1) { // Last row (Total)
+            data.cell.styles.fontSize = 12;
+        }
+    }
+  });
+
 
   // Footer
   doc.setFontSize(10);
