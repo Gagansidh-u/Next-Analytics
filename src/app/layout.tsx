@@ -6,6 +6,7 @@ import CursorGlow from '@/components/cursor-glow';
 import Script from 'next/script';
 import { FirebaseClientProvider } from '@/firebase';
 import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 const siteUrl = 'https://nextanalytics.store';
 const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_ID;
@@ -138,6 +139,7 @@ export default function RootLayout({
           <Toaster />
         </FirebaseClientProvider>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
